@@ -1,11 +1,3 @@
-/****************************************************/
-/* File: main.c                                     */
-/* Main program for C- compiler                     */
-/* Adapted from:                                    */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #include "globals.h"
 
 /* set NO_PARSE to TRUE to get a scanner-only compiler */
@@ -24,11 +16,8 @@
 #else
 #include "parse.h"
 #if !NO_ANALYZE
-#include "analyze.h"
+//#include "analyze.h"  INCLUIR DEPOIS - ANALISADOR SEMANTICO
 #if !NO_CODE
-#include "cgen.h"
-#include "assembly.h"
-#include "binary.h"
 #endif
 #endif
 #endif
@@ -73,12 +62,13 @@ int main( int argc, char * argv[] )
     fprintf(listing,"\nSyntax tree:\n");
     printTree(syntaxTree);
 
-#if !NO_ANALYZE7
+/*
+#if !NO_ANALYZE7 
   if (TraceAnalyze) fprintf(listing,"\nBuilding Symbol Table...\n");
     buildSymtab(syntaxTree);
-   if (TraceAnalyze) fprintf(listing,"\nChecking Types...\n");
+   if (TraceAnalyze) fprintf(listing,"\nChecking Types...\n");     ANALISADOR SEMANTICO
     typeCheck(syntaxTree);
-   if (TraceAnalyze) fprintf(listing,"\nType Checking Finished\n");
+   if (TraceAnalyze) fprintf(listing,"\nType Checking Finished\n"); */
 
 #if !NO_CODE
    if (!Error){
@@ -91,21 +81,15 @@ int main( int argc, char * argv[] )
     if (code == NULL)
     { printf("Unable to open %s\n",codefile);
       exit(1);
-    }
+    }/*
     fprintf(listing,"\nCreating Intermediate Code...\n");
-    codeGen(syntaxTree,codefile);
-    fprintf(listing,"\nIndermediate Code Created\n");
-    fprintf(listing,"\nGenerating Assembly Code...\n");
-    generateAssembly(getIntermediate());
-    fprintf(listing,"\nAssembly Code Generated...\n");
-    fprintf(listing,"\nGenerating Binary Code...\n");
-    generateBinary(getAssembly(), getSize());
-    fprintf(listing,"\nBinary Code Generated...\n");
+    codeGen(syntaxTree,codefile);                             GERADOR DE COD. INTERMED.
+    fprintf(listing,"\nIndermediate Code Created\n");*/
     fclose(code);
    } 
 #endif
 #endif
-#endif
+//#endif
   fclose(source);
   return 0;
 }

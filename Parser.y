@@ -16,20 +16,25 @@ char * datatype = "";
 static char *savedname;
 int flag = 0;
 int params = 0;
+%}
 
 %start init
-%token IF ELSE WHI RET
+%token IF ELSE WHI RET VOID
+%right INT
+%token ATR PEV ACH FCH ACO FCO MAIO MENO MAIG MEIG DIF IGL VIRG TB LINE SPACE
+%token FIM ERR
 %token ID NUM 
 %left SOM SUB
 %left MUL DIV
-%token ATR PEV INT VOID ACH FCH ACO FCO MAIO MENO MAIG MEIG DIF IGL VIRG TB LINE SPACE
 %token APR FPR
-%token COM  FIMCOM FIM ERR
+%nonassoc FPR
+%nonassoc ELSE
 
 //Para mostrar o valor semântico to token quando for debugar o parser
 %printer { fprintf (yyoutput, "’%d’", $$); } NUM
 
 %%
+
 init:  lista-dec { savedTree = $1; }
 ;
 
@@ -75,7 +80,7 @@ exp-dec: exp PEV | PEV
 sel-dec: IF APR exp FPR dec-interna | IF APR exp FPR dec-interna ELSE dec-interna
 ;
 
-interacao-dec: WHI APR exp FPR dec-interna
+iteracao-dec: WHI APR exp FPR dec-interna
 ;
 
 retorno-dec: RET PEV | RET exp PEV
