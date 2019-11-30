@@ -56,7 +56,9 @@ escopo: ACH dec-locais lista-dec-locais FCH
 dec-locais: dec-locais var-dec | /*vazio*/ 
 ;
 
-lista-dec-locais: lista-dec-locais dec-interna | /*vazio*/ 
+lista-dec-locais: lista-dec-locais dec-interna | /*vazio*/
+;
+ 
 dec-interna: exp-dec | escopo | sel-dec | iteracao-dec | retorno-dec
 ;
 
