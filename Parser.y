@@ -1,14 +1,21 @@
 %{
-//GLC para gerar parser para calculadora simples
-#include <stdio.h>
-#define YYDEBUG 1    //Para exibir na tela os passos da análise sintática quando o parser é executado
-void yyerror(char *);
-extern "C"
-{
-  int yylex(void);
-  void abrirArq();
-}
-%}
+#define YYPARSER /* distinguishes Yacc output from other code files */
+
+#include "globals.h"
+#include "util.h"
+#include "scan.h"
+#include "parse.h"
+
+#define YYSTYPE TreeNode *
+static TreeNode * savedTree; /* stores syntax tree for later return */
+static int yylex(void);
+int yyerror(char *msg);
+char *scope = "Global";
+char * idtype = "";
+char * datatype = "";
+static char *savedname;
+int flag = 0;
+int params = 0;
 
 %start init
 %token IF ELSE WHI RET
@@ -112,16 +119,21 @@ arg-lista: arg-lista VIRG exp | exp
 
 %%
 
-int main(){
-  extern int yydebug;
-  yydebug = 1;
-
-  printf("\nParser em execução...\n");
-  abrirArq();
-  return yyparse();
+int yyerror(char * message)
+{ fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
+  fprintf(listing,"Current token: ");
+  printToken(yychar,tokenString);
+  Error = TRUE;
+  return 0;
 }
 
-void yyerror(char * msg){
-  extern char* yytext;
-  printf("\n%s : %s %d\n", msg, yytext, yylval);
+/* yylex calls getToken to make Yacc/Bison output
+ * compatible with ealier versions of the TINY scanner
+ */
+static int yylex(void)
+{ return getToken(); }
+
+TreeNode * parse(void)
+{ yyparse();
+  return savedTree;
 }
