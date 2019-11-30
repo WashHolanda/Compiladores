@@ -122,7 +122,7 @@ args: args VIRG exp | exp
 %%
 
 int yyerror(char * message)
-{ fprintf(listing,"Syntax error at line %d: %s\n",num_lines,message);
+{ fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
   fprintf(listing,"Current token: ");
   printToken(yychar,tokenString);
   Error = TRUE;
