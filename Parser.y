@@ -60,10 +60,10 @@ tipo-parametro: tipo ID | tipo ID ACO FCO
 escopo: ACH dec-locais lista-dec-locais FCH
 ;
 
-dec-locais: dec-locais var-dec | /*vazio*/ 
+dec-locais: dec-locais var-dec | error {yyerrok;}
 ;
 
-lista-dec-locais: lista-dec-locais dec-interna | /*vazio*/
+lista-dec-locais: lista-dec-locais dec-interna | error {yyerrok;}
 ;
  
 dec-interna: exp-dec | escopo | sel-dec | iteracao-dec | retorno-dec
@@ -81,7 +81,7 @@ interacao-dec: WHI APR exp FPR dec-interna
 retorno-dec: RET PEV | RET exp PEV
 ;
 
-exp: var IGL exp | exp-simples
+exp: var ATR exp | exp-simples
 ;
 
 var: ID | ID ACO exp FCO
@@ -90,7 +90,7 @@ var: ID | ID ACO exp FCO
 exp-simples: exp-soma relacional exp-soma | exp-soma
 ;
 
-relacional: MEIG | MENO | MAIO | MAIG | ATR | DIF
+relacional: MEIG | MENO | MAIO | MAIG | IGL | DIF
 ;
 
 exp-soma: exp-soma soma termo | termo
@@ -108,13 +108,10 @@ mult: MUL | DIV
 fator: APR exp FPR | var | ativacao | NUM
 ;
 
-ativacao: ID APR args FPR
+ativacao: ID APR args FPR | ID APR FPR
 ;
 
-args: arg-lista |  /*vazio*/
-;
-
-arg-lista: arg-lista VIRG exp | exp
+args: args VIRG exp | exp
 ;
 
 %%
