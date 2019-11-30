@@ -1,3 +1,4 @@
-void main(void){ 
-    a = 0;
-}
+int teste(void){
+    void a;
+    a = 1;
+ }

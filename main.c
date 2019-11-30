@@ -41,7 +41,7 @@ int main( int argc, char * argv[] )
 { TreeNode * syntaxTree;
   char pgm[120]; /* source code file name */
   if (argc != 2)
-    { fprintf(stderr,"usage: %s <filename>\n",argv[0]);
+    { fprintf(stderr,"Arquivo não especificado.\n Uso: %s <caminho do arquivo>\n",argv[0]);
       exit(1);
     }
   strcpy(pgm,argv[1]) ;
@@ -49,7 +49,7 @@ int main( int argc, char * argv[] )
      strcat(pgm,".tny");
   source = fopen(pgm,"r");
   if (source==NULL)
-  { fprintf(stderr,"File %s not found\n",pgm);
+  { fprintf(stderr,"Arquivo %s não encontrado.\n",pgm);
     exit(1);
   }
   listing = stdout; /* send listing to screen */
@@ -59,7 +59,7 @@ int main( int argc, char * argv[] )
 #else
   syntaxTree = parse();
   if (TraceParse) {
-    fprintf(listing,"\nSyntax tree:\n");
+    fprintf(listing,"\nÁrvore Sintática:\n");
     printTree(syntaxTree);
 
 /*

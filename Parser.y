@@ -9,7 +9,7 @@
 #define YYSTYPE TreeNode *
 static TreeNode * savedTree; /* armazena a arvore sintática para retorno posterior*/
 static int yylex(void);
-int yyerror(char *msg);
+int yyerror(char *message);
 char *scope = "Global";
 char * idtype = "";
 char * datatype = "";
@@ -46,7 +46,7 @@ lista-dec:  lista-dec declaracao | declaracao
 declaracao:  var-dec| fun-dec
 ;
 
-var-dec:  tipo ID PEV | tipo ID ACO NUM FCO PEV
+var-dec:  tipo ID PEV | tipo ID ACO NUM FCO PEV | error {yyerrok;}
 ;
 
 tipo: INT | VOID
@@ -64,10 +64,10 @@ lista-parametros: lista-parametros VIRG tipo-parametro | tipo-parametro
 tipo-parametro: tipo ID | tipo ID ACO FCO
 ;
 
-escopo: ACH dec-locais lista-dec-locais FCH
+escopo: ACH dec-locais lista-dec-locais FCH | ACH FCH | ACH dec-locais FCH |ACH lista-dec-locais FCH |
 ;
 
-dec-locais: dec-locais var-dec | error {yyerrok;}
+dec-locais: dec-locais var-dec | var-dec
 ;
 
 lista-dec-locais: lista-dec-locais dec-interna | error {yyerrok;}
@@ -123,12 +123,12 @@ args: args VIRG exp | exp
 
 %%
 
-int yyerror(char * message)
-{ fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
-  fprintf(listing,"Current token: ");
-  printToken(yychar,tokenString);
-  Error = TRUE;
-  return 0;
+int yyerror(char *message){
+    fprintf(listing,"Erro sintático na linha %d\n",lineno);
+    fprintf(listing,"Token: ");
+    printToken(yychar,tokenString);
+    Error = TRUE;
+    return 0;
 }
 
 /* yylex calls getToken to make Yacc/Bison output

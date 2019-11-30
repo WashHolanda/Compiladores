@@ -17,6 +17,7 @@ OUTRO [^0-9a-zA-Z;/=\-"+""*""("")""{""[""}"">""<""!"",""\n""\t""\]"]
 NEWLINE [\n]
 TAB [\t]
 
+
 %%
 "/*"                    {flag_coment =1; while (token != -1 && token != FIM) token = yylex();}
 "*/"                    {flag_coment =0; return -1;}
@@ -52,7 +53,6 @@ TAB [\t]
 {NEWLINE}               {num_lines++;}
 [ ]*                    {}
 {OUTRO}+		            {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
-<<EOF>>                 {return FIM;}
 %%
 
 TokenType getToken(void)

@@ -13,12 +13,12 @@ static int indentno = 0;
  */
  void printToken( TokenType token, const char* tokenString )
  { switch (token)
-   { case IF:
-     case RET:
-     case ELSE:
-     case INT:
-     case WHI:
-     case VOID: fprintf(listing,"reserved word: %s\n",tokenString);break;
+   { case IF:   fprintf(listing,"%s\n",tokenString);break;
+     case RET:  fprintf(listing,"%s\n",tokenString);break;
+     case ELSE: fprintf(listing,"%s\n",tokenString);break;
+     case INT:  fprintf(listing,"%s\n",tokenString);break;
+     case WHI:  fprintf(listing,"%s\n",tokenString);break;
+     case VOID: fprintf(listing,"%s\n",tokenString);break;
      case IGL: fprintf(listing,"=\n"); break;
      case ATR: fprintf(listing,"==\n"); break;
      case DIF: fprintf(listing,"!=\n"); break;
@@ -39,17 +39,11 @@ static int indentno = 0;
      case MUL: fprintf(listing,"*\n"); break;
      case DIV: fprintf(listing,"/\n"); break;
      case FIM: fprintf(listing,"EOF\n"); break;
-     case NUM:
-       fprintf(listing,
-           "NUM, val= %s\n",tokenString);
-       break;
-     case ID:
-       fprintf(listing,
-           "ID, name= %s\n",tokenString);
-       break;
+     case NUM: fprintf(listing,"NUM, val= %s\n",tokenString);break;
+     case ID:  fprintf(listing,"ID, name= %s\n",tokenString);break;
      case ERR:
        fprintf(listing,
-           "ERROR: %s\n",tokenString);
+           "%s\n",tokenString);
        break;
      default: /* should never happen */
        fprintf(listing,"Unknown token: %d\n",token);
