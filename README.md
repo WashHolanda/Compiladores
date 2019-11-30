@@ -1,7 +1,7 @@
-ESPECIFICAÇÕES PARA FUNCIONAMENTO DO COMPILADOR
+ESPECIFICAÇÕES PARA FUNCIONAMENTO DO COMPILADOR:
 
-**Comandos para dar permissão aos scripts
+**Comandos para dar permissão aos scripts:
 chmod +x run.sh
 chmod +x clean.sh
 
-**Executar compilador
+**Executar compilador:
