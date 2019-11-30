@@ -1,4 +1,3 @@
-teste
 %{
 #include <Parser.tab.h>
 extern YYSTYPE yylval;
