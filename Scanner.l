@@ -1,7 +1,14 @@
 %{
-#include <Parser.tab.h>
-extern YYSTYPE yylval;
-void abrirArq();
+#include "globals.h"
+#include "util.h"
+#include "scan.h"
+/* lexeme of identifier or reserved word */
+char tokenString[MAXTOKENLEN+1];
+extern int yylex(void);
+
+int flag_coment = 0;
+int num_lines = 0;
+int token = 0;
 %}
 
 DIGITO [0-9]
@@ -11,8 +18,8 @@ NEWLINE [\n]
 TAB [\t]
 
 %%
-"/*"                    {flag_coment =1; while (token != FIMCOM && token != FIM) token = yylex();}
-"*/"                    {flag_coment =0;return FIMCOM;}
+"/*"                    {flag_coment =1; while (token != -1 && token != FIM) token = yylex();}
+"*/"                    {flag_coment =0; return -1;}
 {DIGITO}+		            {return NUM;}
 "int"                   {return INT;}
 "void"                  {return VOID;}
@@ -45,7 +52,7 @@ TAB [\t]
 {NEWLINE}               {num_lines++;}
 [ ]*                    {}
 {OUTRO}+		            {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
-<<EOF>>                 {}
+<<EOF>>                 {return FIM;}
 %%
 
 TokenType getToken(void)
