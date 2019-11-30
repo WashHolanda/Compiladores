@@ -7,7 +7,7 @@
 #include "parse.h"
 
 #define YYSTYPE TreeNode *
-static TreeNode * savedTree; /* stores syntax tree for later return */
+static TreeNode * savedTree; /* armazena a arvore sintática para retorno posterior*/
 static int yylex(void);
 int yyerror(char *msg);
 char *scope = "Global";
@@ -18,6 +18,7 @@ int flag = 0;
 int params = 0;
 %}
 
+//Alfabeto de Tokens recebidos pelo Parser
 %start init
 %token IF ELSE WHI RET VOID
 %right INT
@@ -30,9 +31,10 @@ int params = 0;
 %nonassoc FPR
 %nonassoc ELSE
 
-//Para mostrar o valor semântico to token quando for debugar o parser
+//Para mostrar o valor semântico do token quando for debugar o parser
 %printer { fprintf (yyoutput, "’%d’", $$); } NUM
 
+//Expressões Regulares
 %%
 
 init:  lista-dec { savedTree = $1; }

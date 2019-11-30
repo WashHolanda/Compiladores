@@ -8,4 +8,8 @@ $ chmod +x clean.sh (limpar arquivos de montagem)
 
 **Executar compilador:
 
-$ ./compilador [codigo.txt]
+$ ./run.sh
+
+$ ./compilador [diretorio do arquivo a ser testado]
+
+$ ./clean.sh
