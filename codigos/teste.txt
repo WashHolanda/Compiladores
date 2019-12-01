@@ -1,7 +1,7 @@
 /* programa para ordenação por seleção de 
    uma matriz com dez elementos. */
 
-int vet[ 5 ];
+int vet[  ];
 
 int minloc ( int a[], int low, int high )
 {	int i; int x; int k;

@@ -136,10 +136,43 @@ args: args VIRG exp | exp
 %%
 
 int yyerror(char *message){
-    fprintf(listing,"Erro sintático na linha %d\n",lineno);
-    fprintf(listing,"Token: ");
-    printToken(yychar,tokenString);
-    Error = TRUE;
+    Error = FALSE;
+
+    if(yychar == ERR) printf("Erro léxico na linha %d. Lexema: ", lineno);
+    else printf("Erro sintático na linha %d. Token: ", lineno);
+    switch (yychar){
+        case IF:   printf("%s\n",tokenString);break;
+        case RET:  printf("%s\n",tokenString);break;
+        case ELSE: printf("%s\n",tokenString);break;
+        case INT:  printf("%s\n",tokenString);break;
+        case WHI:  printf("%s\n",tokenString);break;
+        case VOID: printf("%s\n",tokenString);break;
+        case IGL:  printf("==\n"); break;
+        case ATR:  printf("=\n"); break;
+        case DIF:  printf("!=\n"); break;
+        case MENO: printf("<\n"); break;
+        case MAIO: printf(">\n"); break;
+        case MEIG: printf("<=\n"); break;
+        case MAIG: printf(">=\n"); break;
+        case APR:  printf("(\n"); break;
+        case FPR:  printf(")\n"); break;
+        case ACO:  printf("[\n"); break;
+        case FCO:  printf("]\n"); break;
+        case ACH:  printf("{\n"); break;
+        case FCH:  printf("}\n"); break;
+        case PEV:  printf(";\n"); break;
+        case VIRG: printf(",\n"); break;
+        case SOM:  printf("+\n"); break;
+        case SUB:  printf("-\n"); break;
+        case MUL:  printf("*\n"); break;
+        case DIV:  printf("/\n"); break;
+        case FIM:  printf("EOF\n"); break;
+        case NUM:  printf("NUM, valor = %s\n",tokenString);break;
+        case ID:   printf("ID, lexema = %s\n",tokenString);break;
+        case ERR:  printf("%s\n",tokenString);break;
+        default: /* should never happen */
+          fprintf(listing,"Token desconhecido: %d\n",yychar);
+   }
     return 0;
 }
 

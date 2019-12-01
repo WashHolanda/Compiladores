@@ -19,8 +19,8 @@ static int indentno = 0;
      case INT:  fprintf(listing,"%s\n",tokenString);break;
      case WHI:  fprintf(listing,"%s\n",tokenString);break;
      case VOID: fprintf(listing,"%s\n",tokenString);break;
-     case IGL: fprintf(listing,"=\n"); break;
-     case ATR: fprintf(listing,"==\n"); break;
+     case IGL: fprintf(listing,"==\n"); break;
+     case ATR: fprintf(listing,"=\n"); break;
      case DIF: fprintf(listing,"!=\n"); break;
      case MENO: fprintf(listing,"<\n"); break;
      case MAIO: fprintf(listing,">\n"); break;
@@ -39,8 +39,8 @@ static int indentno = 0;
      case MUL: fprintf(listing,"*\n"); break;
      case DIV: fprintf(listing,"/\n"); break;
      case FIM: fprintf(listing,"EOF\n"); break;
-     case NUM: fprintf(listing,"NUM, val= %s\n",tokenString);break;
-     case ID:  fprintf(listing,"ID, name= %s\n",tokenString);break;
+     case NUM: fprintf(listing,"NUM, val = %s\n",tokenString);break;
+     case ID:  fprintf(listing,"ID, name = %s\n",tokenString);break;
      case ERR:
        fprintf(listing,
            "%s\n",tokenString);
