@@ -46,7 +46,9 @@ lista-dec:  lista-dec declaracao | declaracao
 declaracao:  var-dec| fun-dec
 ;
 
-var-dec:  tipo ID PEV | tipo ID ACO NUM FCO PEV | error {yyerrok;}
+var-dec:  tipo ID PEV 
+    | tipo ID ACO NUM FCO PEV 
+    | error {yyerrok;}
 ;
 
 tipo: INT | VOID
@@ -58,28 +60,38 @@ fun-dec: tipo ID APR parametros FPR escopo
 parametros: VOID | lista-parametros
 ;
 
-lista-parametros: lista-parametros VIRG tipo-parametro | tipo-parametro
+lista-parametros: lista-parametros VIRG lista-parametros | tipo-parametro
 ;
 
 tipo-parametro: tipo ID | tipo ID ACO FCO
 ;
 
-escopo: ACH dec-locais lista-dec-locais FCH | ACH FCH | ACH dec-locais FCH |ACH lista-dec-locais FCH |
+escopo: ACH dec-locais lista-dec-locais FCH 
+    | ACH FCH 
+    | ACH dec-locais FCH 
+    | ACH lista-dec-locais FCH
 ;
 
-dec-locais: dec-locais var-dec | var-dec
+dec-locais: dec-locais var-dec 
+    | var-dec
 ;
 
-lista-dec-locais: lista-dec-locais dec-interna | error {yyerrok;}
+lista-dec-locais: lista-dec-locais dec-interna 
+    | dec-interna
 ;
  
-dec-interna: exp-dec | escopo | sel-dec | iteracao-dec | retorno-dec
+dec-interna: exp-dec 
+    | escopo 
+    | sel-dec 
+    | iteracao-dec 
+    | retorno-dec
 ;
 
-exp-dec: exp PEV | PEV
+exp-dec: exp PEV | PEV 
 ;
 
-sel-dec: IF APR exp FPR dec-interna | IF APR exp FPR dec-interna ELSE dec-interna
+sel-dec: IF APR exp FPR dec-interna 
+    | IF APR exp FPR dec-interna ELSE dec-interna
 ;
 
 iteracao-dec: WHI APR exp FPR dec-interna
@@ -97,7 +109,7 @@ var: ID | ID ACO exp FCO
 exp-simples: exp-soma relacional exp-soma | exp-soma
 ;
 
-relacional: MEIG | MENO | MAIO | MAIG | IGL | DIF
+relacional: IGL | MENO | MAIO | MAIG | MEIG  | DIF
 ;
 
 exp-soma: exp-soma soma termo | termo
