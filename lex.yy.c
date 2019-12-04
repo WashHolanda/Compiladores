@@ -492,13 +492,15 @@ char *yytext;
 #include "scan.h"
 /* lexeme of identifier or reserved word */
 char tokenString[MAXTOKENLEN+1];
+char id[MAXTOKENLEN+1];
+char func[MAXTOKENLEN+1];
 extern int yylex(void);
 
 int flag_coment = 0;
 int num_lines = 0;
 int token = 0;
-#line 501 "lex.yy.c"
-#line 502 "lex.yy.c"
+#line 503 "lex.yy.c"
+#line 504 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -715,9 +717,9 @@ YY_DECL
 		}
 
 	{
-#line 21 "Scanner.l"
+#line 23 "Scanner.l"
 
-#line 721 "lex.yy.c"
+#line 723 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -776,181 +778,181 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 22 "Scanner.l"
+#line 24 "Scanner.l"
 {flag_coment =1; while (token != -1 && token != FIM) token = yylex();}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 23 "Scanner.l"
+#line 25 "Scanner.l"
 {flag_coment =0; return -1;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 24 "Scanner.l"
+#line 26 "Scanner.l"
 {return NUM;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 25 "Scanner.l"
+#line 27 "Scanner.l"
 {return INT;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 26 "Scanner.l"
+#line 28 "Scanner.l"
 {return VOID;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 27 "Scanner.l"
+#line 29 "Scanner.l"
 {return RET;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 28 "Scanner.l"
+#line 30 "Scanner.l"
 {return IF;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 29 "Scanner.l"
+#line 31 "Scanner.l"
 {return ELSE;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 30 "Scanner.l"
+#line 32 "Scanner.l"
 {return WHI;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 31 "Scanner.l"
-{return ID;}
+#line 33 "Scanner.l"
+{ return ID;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 32 "Scanner.l"
+#line 34 "Scanner.l"
 {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 33 "Scanner.l"
+#line 35 "Scanner.l"
 {return SOM;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 34 "Scanner.l"
+#line 36 "Scanner.l"
 {return SUB;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 35 "Scanner.l"
+#line 37 "Scanner.l"
 {return MUL;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 36 "Scanner.l"
+#line 38 "Scanner.l"
 {return DIV;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 37 "Scanner.l"
+#line 39 "Scanner.l"
 {return MAIG;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 38 "Scanner.l"
+#line 40 "Scanner.l"
 {return MEIG;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 39 "Scanner.l"
+#line 41 "Scanner.l"
 {return IGL;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 40 "Scanner.l"
+#line 42 "Scanner.l"
 {return ATR;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 41 "Scanner.l"
+#line 43 "Scanner.l"
 {return MAIO;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 42 "Scanner.l"
+#line 44 "Scanner.l"
 {return MENO;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 43 "Scanner.l"
+#line 45 "Scanner.l"
 {return DIF;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 44 "Scanner.l"
+#line 46 "Scanner.l"
 {return VIRG;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 45 "Scanner.l"
+#line 47 "Scanner.l"
 {return PEV;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 46 "Scanner.l"
+#line 48 "Scanner.l"
 {return APR;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 47 "Scanner.l"
+#line 49 "Scanner.l"
 {return FPR;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 48 "Scanner.l"
+#line 50 "Scanner.l"
 {return ACH;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 49 "Scanner.l"
+#line 51 "Scanner.l"
 {return FCH;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 50 "Scanner.l"
+#line 52 "Scanner.l"
 {return ACO;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 51 "Scanner.l"
+#line 53 "Scanner.l"
 {return FCO;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 52 "Scanner.l"
+#line 54 "Scanner.l"
 {}
 	YY_BREAK
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 53 "Scanner.l"
-{num_lines++;}
+#line 55 "Scanner.l"
+{NL;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 54 "Scanner.l"
+#line 56 "Scanner.l"
 {}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 55 "Scanner.l"
+#line 57 "Scanner.l"
 {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 56 "Scanner.l"
+#line 58 "Scanner.l"
 ECHO;
 	YY_BREAK
-#line 954 "lex.yy.c"
+#line 956 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1955,7 +1957,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 56 "Scanner.l"
+#line 58 "Scanner.l"
 
 
 TokenType getToken(void)
@@ -1968,6 +1970,7 @@ TokenType getToken(void)
     yyout = listing;
   }
   currentToken = yylex();
+  if(currentToken == ID) strncpy(id,yytext,MAXTOKENLEN);
   strncpy(tokenString,yytext,MAXTOKENLEN);
   if (TraceScan) {
     fprintf(listing,"\t%d: ",lineno);
@@ -1975,9 +1978,3 @@ TokenType getToken(void)
   }
   return currentToken;
 }
-
-/*
-*void abrirArq()
-*{
-*  yyin = fopen("entrada.txt", "r");
-*}*/

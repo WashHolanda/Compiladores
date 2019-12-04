@@ -135,8 +135,8 @@ static void printSpaces(void)
            break;
        }
      }
-     else if (tree->nodekind==ExpK)
-     { switch (tree->kind.exp) {
+     else if (tree->nodekind==ExpK){
+      switch (tree->kind.exp) {
          case OpK:
            fprintf(listing,"Op: ");
            printToken(tree->attr.op,"\0");
@@ -157,19 +157,16 @@ static void printSpaces(void)
            fprintf(listing,"Chamada da Função: %s\n",tree->attr.name);
            break;
          case TypeK:
-         //  if(tree->size == 0)
-             fprintf(listing,"Tipo: %s\n",tree->attr.name);
-           //else
-             //fprintf(listing,"Tipo: %s[%d]\n",tree->attr.name,tree->size);
+           fprintf(listing,"Tipo: %s\n",tree->attr.name);
            break;
           case ParamK:
-           fprintf(listing,"Id: %s\n",tree->attr.name);
+           fprintf(listing,"Parametro: %s\n",tree->attr.name);
            break; 
           case VetorK:
           fprintf(listing, "Vetor: %s\n", tree->attr.name);
 	        break;
           default:
-           fprintf(listing,"Unknown ExpNode kind\n");
+           fprintf(listing,"Unknown ExpNode kind: %d\n", tree->nodekind);
            break;
        }
      }

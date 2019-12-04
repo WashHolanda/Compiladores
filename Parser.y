@@ -13,7 +13,8 @@ int yyerror(char *message);
 char *scope = "Global";
 char * idtype = "";
 char * datatype = "";
-static char *savedname;
+TreeNode * teste;
+static char *savedname = "";
 int flag = 0;
 int params = 0;
 %}
@@ -22,7 +23,7 @@ int params = 0;
 %start init
 %token IF ELSE WHI RET VOID
 %right INT
-%token ATR PEV ACH FCH ACO FCO MAIO MENO MAIG MEIG DIF IGL VIRG TB LINE SPACE
+%token ATR PEV ACH FCH ACO FCO MAIO MENO MAIG MEIG DIF IGL VIRG TB LINE SPACE NL
 %token FIM ERR
 %token ID NUM 
 %left SOM SUB
@@ -40,97 +41,339 @@ int params = 0;
 init:  lista-dec { savedTree = $1; }
 ;
 
-lista-dec:  lista-dec declaracao | declaracao
+lista-dec:  lista-dec declaracao {
+            YYSTYPE t = $1;
+              if (t != NULL){
+                while (t->sibling != NULL)
+                   t = t->sibling;
+                t->sibling = $2;
+                $$ = $1;
+              }
+              else $$ = $2;
+          }| declaracao { $$ = $1; }
 ;
 
-declaracao:  var-dec| fun-dec
+declaracao:  var-dec { $$ = $1 ;} | fun-dec { $$ = $1; scope = "Global"; }
 ;
 
-var-dec:  tipo ID PEV 
-    | tipo ID ACO NUM FCO PEV 
+var-dec:  tipo ID PEV {
+            $$ = newExpNode(VarDeclK);
+            $$->attr.name = copyString(id);
+            $$->child[0] = $1;
+            $$->type = $1->type;
+            $$->scope= scope;
+            $$->kind.exp = VarDeclK;
+            $$->lineno = lineno;
+          }
+    | tipo ID ACO NUM FCO PEV {
+            $$ = newExpNode(VetorK);
+            $$->attr.name = copyString(id);
+            $$->child[0] = $1;
+            $$->type = $1->type;
+            $$->scope= scope;
+            $$->kind.exp = VarDeclK;
+            $$->lineno = lineno;
+          }
     | error {yyerrok;}
 ;
 
-tipo: INT | VOID
+tipo: INT {
+            $$ = newExpNode(TypeK);
+            $$->attr.name = "INT";
+            $$->type = INTTYPE;
+            $$->kind.exp = TypeK; }
+    | VOID {
+            $$ = newExpNode(TypeK);
+            $$->attr.name = "VOID";
+            $$->type = VOIDTYPE;
+            $$->kind.exp = TypeK; }
 ;
 
-fun-dec: tipo ID APR parametros FPR escopo
+fun-id:  ID {
+            $$ = newExpNode(IdK);
+            $$->attr.name = copyString(id);
+            $$->kind.exp = IdK; }
+;
+fun-dec: tipo fun-id APR parametros FPR escopo{
+              $$ = newExpNode(FunDeclK);
+              $$->kind.exp = FunDeclK;
+              $$->attr.name = $2->attr.name;
+              $$->child[0] = $1;
+              $$->type = $1->type;
+              $$->scope = scope;
+              scope = $2->attr.name;
+              $$->child[1] = $4;
+              $$->child[2] = $6;
+              $$->lineno = lineno;
+            }
 ;
 
-parametros: VOID | lista-parametros
+parametros: VOID {
+            $$ = newExpNode(TypeK);
+            $$->attr.name = "VOID";
+            $$->size = 0;
+            $$->child[0] = NULL;
+            $$->lineno = lineno;
+          } 
+        | lista-parametros { $$ = $1; }
 ;
 
-lista-parametros: lista-parametros VIRG lista-parametros | tipo-parametro
+lista-parametros: lista-parametros VIRG lista-parametros {
+                YYSTYPE t = $1;
+                if (t != NULL){
+                  while (t->sibling != NULL)
+                       t = t->sibling;
+                  t->sibling = $3;
+                  $$ = $1;
+                }
+                else $$ = $3;
+              } | tipo-parametro { $$ = $1; }
 ;
 
-tipo-parametro: tipo ID | tipo ID ACO FCO
+tipo-parametro: tipo ID {
+          $$ = newExpNode(ParamK);
+          $$->attr.name = copyString(id);
+          $$->scope = scope;
+          $$->kind.exp = ParamK;
+          $$->size = 0;
+          $$->lineno = lineno;
+          $$->type = $1->type;
+          $$->child[0] = $1;
+        } | tipo ID ACO FCO{
+         $$ = newExpNode(ParamK);
+          $$->child[0] = $1;
+          $$->attr.name = copyString(id);
+          $$->scope = scope;
+          $$->kind.exp = ParamK;
+          $$->size = 0;
+          $$->lineno = lineno;
+          $$->type = $1->type;
+          $$->child[0] = $1;
+        }
 ;
 
-escopo: ACH dec-locais lista-dec-locais FCH 
-    | ACH FCH 
-    | ACH dec-locais FCH 
-    | ACH lista-dec-locais FCH
+escopo: ACH dec-locais lista-dec-locais FCH {
+                YYSTYPE t = $2;
+                  if (t != NULL){
+                    while (t->sibling != NULL)
+                       t = t->sibling;
+                    t->sibling = $3;
+                    $$ = $2;
+                  }
+                  else $$ = $3;
+              }
+    | ACH FCH {}
+    | ACH dec-locais FCH { $$ = $2; }
+    | ACH lista-dec-locais FCH { $$ = $2; }
 ;
 
-dec-locais: dec-locais var-dec 
-    | var-dec
+dec-locais: dec-locais var-dec {
+              YYSTYPE t = $1;
+                if (t != NULL){
+                  while (t->sibling != NULL)
+                     t = t->sibling;
+                  t->sibling = $2;
+                  $$ = $1;
+                }
+                else $$ = $2;
+            }
+    | var-dec { $$ = $1; }
 ;
 
-lista-dec-locais: lista-dec-locais dec-interna 
-    | dec-interna
+lista-dec-locais: lista-dec-locais dec-interna {
+              YYSTYPE t = $1;
+              if (t != NULL){
+                while (t->sibling != NULL)
+                t = t->sibling;
+                t->sibling = $2;
+                $$ = $1;
+              }
+              else $$ = $2;
+            }
+    | dec-interna { $$ = $1; }
 ;
  
-dec-interna: exp-dec 
-    | escopo 
-    | sel-dec 
-    | iteracao-dec 
-    | retorno-dec
+dec-interna: exp-dec { $$ = $1; }
+    | escopo { $$ = $1; }
+    | sel-dec { $$ = $1; }
+    | iteracao-dec { $$ = $1; }
+    | retorno-dec { $$ = $1; }
 ;
 
-exp-dec: exp PEV | PEV 
+exp-dec: exp PEV { $$ = $1; }| PEV {}
 ;
 
-sel-dec: IF APR exp FPR dec-interna 
-    | IF APR exp FPR dec-interna ELSE dec-interna
+sel-dec: IF APR exp FPR dec-interna {
+            $$ = newStmtNode(IfK);
+            $$->attr.name = "IF";
+            $$->child[0] = $3;
+            $$->child[1] = $5;
+            $$->scope = $3->scope;
+            $$->lineno = lineno;
+            $$->kind.stmt = IfK;
+          }
+    | IF APR exp FPR dec-interna ELSE dec-interna{
+            $$ = newStmtNode(IfK);
+            $$->attr.name = "IF";
+            $$->child[0] = $3;
+            $$->child[1] = $5;
+            $$->child[2] = $7;
+            $$->scope= $3->scope;
+            $$->lineno = lineno;
+            $$->kind.stmt = IfK;
+          }
 ;
 
-iteracao-dec: WHI APR exp FPR dec-interna
+iteracao-dec: WHI APR exp FPR dec-interna {
+          $$ = newStmtNode(WhileK);
+          $$->attr.name = "WHILE";
+          $$->child[0] = $3;
+          $$->child[1] = $5;
+          $$->scope = $3->scope;
+          $$->lineno = lineno;
+        }
 ;
 
-retorno-dec: RET PEV | RET exp PEV
+retorno-dec: RET exp PEV{
+                $$ = newStmtNode(ReturnK);
+                $$->child[0] = $2;
+                $$->lineno = lineno;
+            }| RET PEV { $$ = newStmtNode(ReturnK); }
 ;
 
-exp: var ATR exp | exp-simples
+exp: var ATR exp {
+        $$ = newStmtNode(AssignK);
+        $$->attr.name= $1->attr.name;
+        $$->scope = scope;
+        $$->child[0] = $1;
+        $$->child[1] = $3;
+        $$->lineno = lineno;
+      }| exp-simples { $$ = $1; }
 ;
 
-var: ID | ID ACO exp FCO
+var: ID {
+        $$ = newExpNode(IdK);
+        $$->attr.name = copyString(id);
+        $$->lineno = lineno;
+  } |ID ACO exp FCO {
+        $$ = newExpNode(IdK);
+        $$->attr.name = copyString(id);
+        $$->child[0] = $3;
+        $$->lineno = lineno;
+        }
 ;
 
-exp-simples: exp-soma relacional exp-soma | exp-soma
+exp-simples: exp-soma relacional exp-soma {
+                  $$ = $2;
+                  $$->child[0] = $1;
+                  $$->child[1] = $3;
+                  $$->scope = scope;
+              } | exp-soma { $$ = $1; }
 ;
 
-relacional: IGL | MENO | MAIO | MAIG | MEIG  | DIF
+relacional: IGL {
+                $$ = newExpNode(OpK);
+                $$->attr.op = IGL;
+                $$->lineno = lineno;
+              } | MENO {
+                $$ = newExpNode(OpK);
+                $$->attr.op = MENO;
+                $$->lineno = lineno;
+              }| MAIO {
+                $$ = newExpNode(OpK);
+                $$->attr.op = MAIO;
+                $$->lineno = lineno;
+              }| MAIG {
+                $$ = newExpNode(OpK);
+                $$->attr.op = MAIG;
+                $$->lineno = lineno;
+              }| MEIG {
+                $$ = newExpNode(OpK);
+                $$->attr.op = MEIG;
+                $$->lineno = lineno;
+              }| DIF {
+                $$ = newExpNode(OpK);
+                $$->attr.op = DIF;
+                $$->lineno = lineno;
+              }
 ;
 
-exp-soma: exp-soma soma termo | termo
+exp-soma: exp-soma soma termo {
+            $$ = $2;
+            $$->child[0] = $1;
+            $$->child[1] = $3;
+            $$->scope = scope;
+            $$->lineno = lineno;
+       }| termo { $$ = $1; }
 ;
 
-soma: SOM | SUB
+soma: SOM {
+         $$ = newExpNode(OpK);
+         $$->attr.op = SOM;
+         $$->lineno = lineno;
+   }| SUB {
+         $$ = newExpNode(OpK);
+         $$->attr.op = SUB;
+         $$->lineno = lineno;
+       }
 ;
 
-termo: termo mult fator | fator
+termo: termo mult fator {
+              $$ = $2;
+              $$->scope = scope;
+              $$->child[0] = $1;
+              $$->child[1] = $3;
+              $$->lineno = lineno;
+    }| fator { $$ = $1; }
 ;
 
-mult: MUL | DIV 
+mult: MUL {
+         $$ = newExpNode(OpK);
+         $$->attr.op = MUL;
+         $$->lineno = lineno;
+   }| DIV {
+         $$ = newExpNode(OpK);
+         $$->attr.op = DIV;
+         $$->lineno = lineno;
+       }
 ;
 
-fator: APR exp FPR | var | ativacao | NUM
+fator: APR exp FPR { $$ = $2; } 
+     | var { $$ = $1; }
+     | ativacao { $$ = $1;
+        params = 0; }
+     | NUM { $$ = $1; }
 ;
 
-ativacao: ID APR args FPR | ID APR FPR
+ativacao: ID APR args FPR {
+          $$ = newExpNode(AtivK);
+          $$->attr.name = copyString(id);
+          $$->scope = scope;
+          $$->child[0] = $3;
+          $$->params = params;
+          $$->lineno = lineno;
+       }| ID APR FPR{
+           $$ = newExpNode(AtivK);
+           $$->attr.name = copyString(id);
+           $$->scope = scope;
+           $$->params = params;
+           $$->lineno = lineno;
+         }
 ;
 
-args: args VIRG exp | exp
+args: args VIRG exp {
+              YYSTYPE t = $1;
+              if (t != NULL){
+                while (t->sibling != NULL)
+                t = t->sibling;
+                t->sibling = $3;
+                params ++;
+                $$ = $1;
+              }
+              else $$ = $3;
+   }| exp { 
+           params ++;
+           $$ = $1; }
 ;
 
 %%

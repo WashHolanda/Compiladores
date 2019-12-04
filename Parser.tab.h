@@ -67,16 +67,17 @@ extern int yydebug;
     TB = 277,
     LINE = 278,
     SPACE = 279,
-    FIM = 280,
-    ERR = 281,
-    ID = 282,
-    NUM = 283,
-    SOM = 284,
-    SUB = 285,
-    MUL = 286,
-    DIV = 287,
-    APR = 288,
-    FPR = 289
+    NL = 280,
+    FIM = 281,
+    ERR = 282,
+    ID = 283,
+    NUM = 284,
+    SOM = 285,
+    SUB = 286,
+    MUL = 287,
+    DIV = 288,
+    APR = 289,
+    FPR = 290
   };
 #endif
 

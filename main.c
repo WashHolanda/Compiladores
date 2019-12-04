@@ -16,7 +16,7 @@
 #else
 #include "parse.h"
 #if !NO_ANALYZE
-//#include "analyze.h"  INCLUIR DEPOIS - ANALISADOR SEMANTICO
+#include "analyze.h"
 #if !NO_CODE
 #endif
 #endif
@@ -62,13 +62,13 @@ int main( int argc, char * argv[] )
     fprintf(listing,"\nÁrvore Sintática:\n");
     printTree(syntaxTree);
 
-/*
+
 #if !NO_ANALYZE7 
-  if (TraceAnalyze) fprintf(listing,"\nBuilding Symbol Table...\n");
+  if (TraceAnalyze) fprintf(listing,"\nConstruindo Tabela de Simbolos...\n");
     buildSymtab(syntaxTree);
-   if (TraceAnalyze) fprintf(listing,"\nChecking Types...\n");     ANALISADOR SEMANTICO
+   if (TraceAnalyze) fprintf(listing,"\nChecando Tipos...\n");
     typeCheck(syntaxTree);
-   if (TraceAnalyze) fprintf(listing,"\nType Checking Finished\n"); */
+   if (TraceAnalyze) fprintf(listing,"\nType Compilação Concluida!\n"); 
 
 #if !NO_CODE
    if (!Error){
@@ -76,7 +76,7 @@ int main( int argc, char * argv[] )
     int fnlen = strcspn(pgm,".");
     codefile = (char *) calloc(fnlen+4, sizeof(char));
     strncpy(codefile,pgm,fnlen);
-    strcat(codefile,"_binary.txt");
+    //strcat(codefile,"_binary.txt");
     code = fopen(codefile,"w");
     if (code == NULL)
     { printf("Unable to open %s\n",codefile);
@@ -89,7 +89,7 @@ int main( int argc, char * argv[] )
    } 
 #endif
 #endif
-//#endif
+#endif
   fclose(source);
   return 0;
 }

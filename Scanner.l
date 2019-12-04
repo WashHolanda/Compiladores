@@ -4,6 +4,8 @@
 #include "scan.h"
 /* lexeme of identifier or reserved word */
 char tokenString[MAXTOKENLEN+1];
+char id[MAXTOKENLEN+1];
+char func[MAXTOKENLEN+1];
 extern int yylex(void);
 
 int flag_coment = 0;
@@ -28,7 +30,7 @@ TAB [\t]
 "if"                    {return IF;}
 "else"                  {return ELSE;}
 "while"                 {return WHI;}
-{LETRA}+	              {return ID;}
+{LETRA}+	              { return ID;}
 ({LETRA}|{DIGITO})+     {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
 "+"				              {return SOM;}
 "-"				              {return SUB;}
@@ -50,7 +52,7 @@ TAB [\t]
 "["                     {return ACO;}
 "]"                     {return FCO;}
 {TAB}                   {}
-{NEWLINE}               {num_lines++;}
+{NEWLINE}               {NL;}
 [ ]*                    {}
 {OUTRO}+		            {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
 %%
@@ -65,6 +67,7 @@ TokenType getToken(void)
     yyout = listing;
   }
   currentToken = yylex();
+  if(currentToken == ID) strncpy(id,yytext,MAXTOKENLEN);
   strncpy(tokenString,yytext,MAXTOKENLEN);
   if (TraceScan) {
     fprintf(listing,"\t%d: ",lineno);
@@ -72,9 +75,3 @@ TokenType getToken(void)
   }
   return currentToken;
 }
-
-/*
-*void abrirArq()
-*{
-*  yyin = fopen("entrada.txt", "r");
-*}*/

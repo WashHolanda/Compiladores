@@ -1,7 +1,3 @@
-/*
-* ALTERAR
-*/
-
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
@@ -59,7 +55,7 @@ extern int lineno; /* source line number for listing */
 
 typedef enum {StmtK,ExpK} NodeKind;
 typedef enum {IfK,WhileK,AssignK,ReturnK} StmtKind;
-typedef enum {OpK,ConstK,IdK,VarDeclK,FunDeclK,AtivK,TypeK,VetorK,ParamK} ExpKind;
+typedef enum {OpK,ConstK,IdK,VarDeclK,VetDeclK,FunDeclK,AtivK,TypeK,VetorK,ParamK} ExpKind;
 
 /* ExpType is used for type checking */
 typedef enum {Void,Integer,Boolean} ExpType;
