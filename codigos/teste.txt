@@ -1,2 +1,8 @@
 void main(int c, int b){
-	d;}
+	int d;
+	int d;
+}
+
+void teste(void){
+	int a;
+}

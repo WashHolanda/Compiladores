@@ -75,7 +75,7 @@
 static TreeNode * savedTree; /* armazena a arvore sintática para retorno posterior*/
 static int yylex(void);
 int yyerror(char *message);
-char *scope = "Global";
+char *scope = "";
 char * idtype = "";
 char * datatype = "";
 TreeNode * teste;
@@ -474,10 +474,10 @@ static const yytype_uint16 yyrline[] =
        0,    41,    41,    44,    53,    56,    56,    59,    68,    77,
       80,    85,    92,    97,   111,   118,   121,   130,   133,   142,
      155,   165,   166,   167,   170,   180,   183,   193,   196,   197,
-     198,   199,   200,   203,   203,   206,   215,   227,   237,   241,
-     244,   251,   254,   258,   266,   271,   274,   278,   282,   286,
-     290,   294,   301,   307,   310,   314,   321,   327,   330,   334,
-     341,   342,   343,   345,   348,   355,   364,   374
+     198,   199,   200,   203,   203,   206,   215,   227,   238,   242,
+     245,   252,   255,   259,   267,   273,   276,   280,   284,   288,
+     292,   296,   303,   309,   312,   316,   323,   329,   332,   336,
+     343,   344,   345,   347,   350,   357,   366,   376
 };
 #endif
 
@@ -1366,7 +1366,7 @@ yyreduce:
 
   case 5:
 #line 56 "Parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]) ;}
+    { (yyval) = (yyvsp[0]); (yyvsp[0])->scope = "svve";}
 #line 1371 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1681,28 +1681,29 @@ yyreduce:
           (yyval)->child[1] = (yyvsp[0]);
           (yyval)->scope = (yyvsp[-2])->scope;
           (yyval)->lineno = lineno;
+          (yyval)->kind.stmt = WhileK;
         }
-#line 1686 "Parser.tab.c" /* yacc.c:1646  */
+#line 1687 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 237 "Parser.y" /* yacc.c:1646  */
+#line 238 "Parser.y" /* yacc.c:1646  */
     {
                 (yyval) = newStmtNode(ReturnK);
                 (yyval)->child[0] = (yyvsp[-1]);
                 (yyval)->lineno = lineno;
             }
-#line 1696 "Parser.tab.c" /* yacc.c:1646  */
+#line 1697 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 241 "Parser.y" /* yacc.c:1646  */
+#line 242 "Parser.y" /* yacc.c:1646  */
     { (yyval) = newStmtNode(ReturnK); }
-#line 1702 "Parser.tab.c" /* yacc.c:1646  */
+#line 1703 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 244 "Parser.y" /* yacc.c:1646  */
+#line 245 "Parser.y" /* yacc.c:1646  */
     {
         (yyval) = newStmtNode(AssignK);
         (yyval)->attr.name= (yyvsp[-2])->attr.name;
@@ -1711,115 +1712,116 @@ yyreduce:
         (yyval)->child[1] = (yyvsp[0]);
         (yyval)->lineno = lineno;
       }
-#line 1715 "Parser.tab.c" /* yacc.c:1646  */
+#line 1716 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 251 "Parser.y" /* yacc.c:1646  */
+#line 252 "Parser.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); }
-#line 1721 "Parser.tab.c" /* yacc.c:1646  */
+#line 1722 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 254 "Parser.y" /* yacc.c:1646  */
+#line 255 "Parser.y" /* yacc.c:1646  */
     {
         (yyval) = newExpNode(IdK);
         (yyval)->attr.name = copyString(id);
         (yyval)->lineno = lineno;
   }
-#line 1731 "Parser.tab.c" /* yacc.c:1646  */
+#line 1732 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 258 "Parser.y" /* yacc.c:1646  */
+#line 259 "Parser.y" /* yacc.c:1646  */
     {
         (yyval) = newExpNode(IdK);
         (yyval)->attr.name = copyString(id);
         (yyval)->child[0] = (yyvsp[-1]);
         (yyval)->lineno = lineno;
         }
-#line 1742 "Parser.tab.c" /* yacc.c:1646  */
+#line 1743 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 266 "Parser.y" /* yacc.c:1646  */
+#line 267 "Parser.y" /* yacc.c:1646  */
     {
+                  (yyval) = newExpNode(AssignK);
                   (yyval) = (yyvsp[-1]);
                   (yyval)->child[0] = (yyvsp[-2]);
                   (yyval)->child[1] = (yyvsp[0]);
                   (yyval)->scope = scope;
               }
-#line 1753 "Parser.tab.c" /* yacc.c:1646  */
+#line 1755 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 271 "Parser.y" /* yacc.c:1646  */
+#line 273 "Parser.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); }
-#line 1759 "Parser.tab.c" /* yacc.c:1646  */
+#line 1761 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 274 "Parser.y" /* yacc.c:1646  */
+#line 276 "Parser.y" /* yacc.c:1646  */
     {
                 (yyval) = newExpNode(OpK);
                 (yyval)->attr.op = IGL;
                 (yyval)->lineno = lineno;
               }
-#line 1769 "Parser.tab.c" /* yacc.c:1646  */
+#line 1771 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 278 "Parser.y" /* yacc.c:1646  */
+#line 280 "Parser.y" /* yacc.c:1646  */
     {
                 (yyval) = newExpNode(OpK);
                 (yyval)->attr.op = MENO;
                 (yyval)->lineno = lineno;
               }
-#line 1779 "Parser.tab.c" /* yacc.c:1646  */
+#line 1781 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 282 "Parser.y" /* yacc.c:1646  */
+#line 284 "Parser.y" /* yacc.c:1646  */
     {
                 (yyval) = newExpNode(OpK);
                 (yyval)->attr.op = MAIO;
                 (yyval)->lineno = lineno;
               }
-#line 1789 "Parser.tab.c" /* yacc.c:1646  */
+#line 1791 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 286 "Parser.y" /* yacc.c:1646  */
+#line 288 "Parser.y" /* yacc.c:1646  */
     {
                 (yyval) = newExpNode(OpK);
                 (yyval)->attr.op = MAIG;
                 (yyval)->lineno = lineno;
               }
-#line 1799 "Parser.tab.c" /* yacc.c:1646  */
+#line 1801 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 290 "Parser.y" /* yacc.c:1646  */
+#line 292 "Parser.y" /* yacc.c:1646  */
     {
                 (yyval) = newExpNode(OpK);
                 (yyval)->attr.op = MEIG;
                 (yyval)->lineno = lineno;
               }
-#line 1809 "Parser.tab.c" /* yacc.c:1646  */
+#line 1811 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 294 "Parser.y" /* yacc.c:1646  */
+#line 296 "Parser.y" /* yacc.c:1646  */
     {
                 (yyval) = newExpNode(OpK);
                 (yyval)->attr.op = DIF;
                 (yyval)->lineno = lineno;
               }
-#line 1819 "Parser.tab.c" /* yacc.c:1646  */
+#line 1821 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 301 "Parser.y" /* yacc.c:1646  */
+#line 303 "Parser.y" /* yacc.c:1646  */
     {
             (yyval) = (yyvsp[-1]);
             (yyval)->child[0] = (yyvsp[-2]);
@@ -1827,37 +1829,37 @@ yyreduce:
             (yyval)->scope = scope;
             (yyval)->lineno = lineno;
        }
-#line 1831 "Parser.tab.c" /* yacc.c:1646  */
+#line 1833 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 307 "Parser.y" /* yacc.c:1646  */
+#line 309 "Parser.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); }
-#line 1837 "Parser.tab.c" /* yacc.c:1646  */
+#line 1839 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 310 "Parser.y" /* yacc.c:1646  */
+#line 312 "Parser.y" /* yacc.c:1646  */
     {
          (yyval) = newExpNode(OpK);
          (yyval)->attr.op = SOM;
          (yyval)->lineno = lineno;
    }
-#line 1847 "Parser.tab.c" /* yacc.c:1646  */
+#line 1849 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 314 "Parser.y" /* yacc.c:1646  */
+#line 316 "Parser.y" /* yacc.c:1646  */
     {
          (yyval) = newExpNode(OpK);
          (yyval)->attr.op = SUB;
          (yyval)->lineno = lineno;
        }
-#line 1857 "Parser.tab.c" /* yacc.c:1646  */
+#line 1859 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 321 "Parser.y" /* yacc.c:1646  */
+#line 323 "Parser.y" /* yacc.c:1646  */
     {
               (yyval) = (yyvsp[-1]);
               (yyval)->scope = scope;
@@ -1865,62 +1867,62 @@ yyreduce:
               (yyval)->child[1] = (yyvsp[0]);
               (yyval)->lineno = lineno;
     }
-#line 1869 "Parser.tab.c" /* yacc.c:1646  */
+#line 1871 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 327 "Parser.y" /* yacc.c:1646  */
+#line 329 "Parser.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); }
-#line 1875 "Parser.tab.c" /* yacc.c:1646  */
+#line 1877 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 330 "Parser.y" /* yacc.c:1646  */
+#line 332 "Parser.y" /* yacc.c:1646  */
     {
          (yyval) = newExpNode(OpK);
          (yyval)->attr.op = MUL;
          (yyval)->lineno = lineno;
    }
-#line 1885 "Parser.tab.c" /* yacc.c:1646  */
+#line 1887 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 334 "Parser.y" /* yacc.c:1646  */
+#line 336 "Parser.y" /* yacc.c:1646  */
     {
          (yyval) = newExpNode(OpK);
          (yyval)->attr.op = DIV;
          (yyval)->lineno = lineno;
        }
-#line 1895 "Parser.tab.c" /* yacc.c:1646  */
+#line 1897 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 341 "Parser.y" /* yacc.c:1646  */
+#line 343 "Parser.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[-1]); }
-#line 1901 "Parser.tab.c" /* yacc.c:1646  */
+#line 1903 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 342 "Parser.y" /* yacc.c:1646  */
+#line 344 "Parser.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); }
-#line 1907 "Parser.tab.c" /* yacc.c:1646  */
+#line 1909 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 343 "Parser.y" /* yacc.c:1646  */
+#line 345 "Parser.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]);
         params = 0; }
-#line 1914 "Parser.tab.c" /* yacc.c:1646  */
+#line 1916 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 345 "Parser.y" /* yacc.c:1646  */
+#line 347 "Parser.y" /* yacc.c:1646  */
     { (yyval) = (yyvsp[0]); }
-#line 1920 "Parser.tab.c" /* yacc.c:1646  */
+#line 1922 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 348 "Parser.y" /* yacc.c:1646  */
+#line 350 "Parser.y" /* yacc.c:1646  */
     {
           (yyval) = newExpNode(AtivK);
           (yyval)->attr.name = copyString(id);
@@ -1929,11 +1931,11 @@ yyreduce:
           (yyval)->params = params;
           (yyval)->lineno = lineno;
        }
-#line 1933 "Parser.tab.c" /* yacc.c:1646  */
+#line 1935 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 355 "Parser.y" /* yacc.c:1646  */
+#line 357 "Parser.y" /* yacc.c:1646  */
     {
            (yyval) = newExpNode(AtivK);
            (yyval)->attr.name = copyString(id);
@@ -1941,11 +1943,11 @@ yyreduce:
            (yyval)->params = params;
            (yyval)->lineno = lineno;
          }
-#line 1945 "Parser.tab.c" /* yacc.c:1646  */
+#line 1947 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 364 "Parser.y" /* yacc.c:1646  */
+#line 366 "Parser.y" /* yacc.c:1646  */
     {
               YYSTYPE t = (yyvsp[-2]);
               if (t != NULL){
@@ -1957,19 +1959,19 @@ yyreduce:
               }
               else (yyval) = (yyvsp[0]);
    }
-#line 1961 "Parser.tab.c" /* yacc.c:1646  */
+#line 1963 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 374 "Parser.y" /* yacc.c:1646  */
+#line 376 "Parser.y" /* yacc.c:1646  */
     { 
            params ++;
            (yyval) = (yyvsp[0]); }
-#line 1969 "Parser.tab.c" /* yacc.c:1646  */
+#line 1971 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1973 "Parser.tab.c" /* yacc.c:1646  */
+#line 1975 "Parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2197,7 +2199,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 379 "Parser.y" /* yacc.c:1906  */
+#line 381 "Parser.y" /* yacc.c:1906  */
 
 
 int yyerror(char *message){

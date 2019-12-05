@@ -10,7 +10,8 @@ char* escopo = "global";
 void UpdateScope(TreeNode * t)
 {
   //printf("atualiza Escopo\n");
-  if (t->child[0] != NULL && t->child[0]->kind.exp == FunDeclK) escopo = t->child[0]->attr.name;
+  if (t->child[0] != NULL && t->kind.exp == FunDeclK)
+  {escopo = t->attr.name;printf(".%s\n",escopo);}
 }
 /* Procedure traverse is a generic recursive
  * syntax tree traversal routine:
@@ -49,7 +50,7 @@ static void nullProc(TreeNode * t)
  */
 static void insertNode( TreeNode * t)
 {
-  //printf("name: %s, nodeKind: %d, exp: %d, stmt: %d \n",t->attr.name,t->nodekind,t->kind.exp,t->kind.stmt); // teste .......
+  printf("[%d]name: %s, nodeKind: %d, exp: %d, stmt: %d  escopo: %s\n",t->lineno,t->attr.name,t->nodekind,t->kind.exp,t->kind.stmt, escopo); // teste .......
   switch (t->nodekind){
     case StmtK:
       switch (t->kind.stmt){
