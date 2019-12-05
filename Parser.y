@@ -53,7 +53,7 @@ lista-dec:  lista-dec declaracao {
           }| declaracao { $$ = $1; }
 ;
 
-declaracao:  var-dec { $$ = $1 ;} | fun-dec { $$ = $1; scope = "Global"; }
+declaracao:  var-dec { $$ = $1 ;} | fun-dec { $$ = $1; char *aux="teste"; $$->scope=aux}
 ;
 
 var-dec:  tipo ID PEV {
@@ -95,13 +95,14 @@ fun-id:  ID {
             $$->kind.exp = IdK; }
 ;
 fun-dec: tipo fun-id APR parametros FPR escopo{
+              char
               $$ = newExpNode(FunDeclK);
               $$->kind.exp = FunDeclK;
               $$->attr.name = $2->attr.name;
               $$->child[0] = $1;
               $$->type = $1->type;
-              $$->scope = scope;
-              scope = $2->attr.name;
+              $$->scope = aux;
+              aux = $2->attr.name;
               $$->child[1] = $4;
               $$->child[2] = $6;
               $$->lineno = lineno;
