@@ -10,7 +10,7 @@
 static TreeNode * savedTree; /* armazena a arvore sintática para retorno posterior*/
 static int yylex(void);
 int yyerror(char *message);
-char *scope = "Global";
+char *scope = "";
 char * idtype = "";
 char * datatype = "";
 TreeNode * teste;
@@ -232,6 +232,7 @@ iteracao-dec: WHI APR exp FPR dec-interna {
           $$->child[1] = $5;
           $$->scope = $3->scope;
           $$->lineno = lineno;
+          $$->kind.stmt = WhileK;
         }
 ;
 
@@ -244,6 +245,7 @@ retorno-dec: RET exp PEV{
 
 exp: var ATR exp {
         $$ = newStmtNode(AssignK);
+        $$->kind.stmt = AssignK;
         $$->attr.name= $1->attr.name;
         $$->scope = scope;
         $$->child[0] = $1;
@@ -265,6 +267,7 @@ var: ID {
 ;
 
 exp-simples: exp-soma relacional exp-soma {
+                  $$ = newStmtNode(AssignK);
                   $$ = $2;
                   $$->child[0] = $1;
                   $$->child[1] = $3;

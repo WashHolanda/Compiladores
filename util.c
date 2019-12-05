@@ -148,7 +148,7 @@ static void printSpaces(void)
            fprintf(listing,"Id: %s Escopo: %s\n",tree->attr.name,tree->scope);
            break;
          case VarDeclK:
-           fprintf(listing,"Var: %s Escopo: %s\n",tree->attr.name,tree->scope);
+           fprintf(listing,"Var: %s Escopo: %s\n",tree->attr.name, tree->scope);
            break;
          case FunDeclK:
            fprintf(listing,"Func: %s Escopo: %s\n",tree->attr.name,tree->scope);

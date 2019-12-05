@@ -49,18 +49,18 @@ static void nullProc(TreeNode * t)
  */
 static void insertNode( TreeNode * t)
 {
-  //printf("name: %s, nodeKind: %d, exp: %d, stmt: %d \n",t->attr.name,t->nodekind,t->kind.exp,t->kind.stmt); // teste .......
+  //printf("[%d]name: %s, nodeKind: %d, exp: %d, stmt: %d \n",t->lineno,t->attr.name,t->nodekind,t->kind.exp,t->kind.stmt); // teste .......
   switch (t->nodekind){
     case StmtK:
+      //printf("AQUI %s\n",t->attr.name);
       switch (t->kind.stmt){
       case AssignK:
         if (st_lookup(t->attr.name) == -1){
-          //printf("AQUI\n");
           /* não encontrado na tabela, cariavel não declarada */
             fprintf(listing,"Erro Semantico: A variavel '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
             Error = TRUE;
           } /* encontrada na tabela, verificar escopo e adicionar linha */
-          else st_insert(t->attr.name,t->lineno,0,escopo,INTTYPE,VAR,t->vet);
+         // else st_insert(t->attr.name,t->lineno,0,escopo,INTTYPE,VAR,t->vet);
         break;
       default:
         break;
@@ -74,7 +74,8 @@ static void insertNode( TreeNode * t)
             st_insert(t->attr.name,t->lineno,location++, escopo,INTTYPE, VAR , t->vet);
           else
           /* encontrado na tabela, verificar escopo */
-            st_insert(t->attr.name,t->lineno,0, escopo,INTTYPE, VAR, t->vet);
+            fprintf(listing,"Erro: Nome da variavel '%s' já utilizada como nome de função.[%d]\n",t->attr.name, t->lineno);
+            //st_insert(t->attr.name,t->lineno,0, escopo,INTTYPE, VAR, t->vet);
           break;
         case FunDeclK:
           if (st_lookup(t->attr.name) == -1){
