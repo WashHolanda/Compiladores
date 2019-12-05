@@ -342,18 +342,18 @@ fator: APR exp FPR { $$ = $2; }
      | NUM { $$ = $1; }
 ;
 
-ativacao: ID APR args FPR {
+ativacao: fun-id APR args FPR {
           $$ = newExpNode(AtivK);
           $$->kind.exp = AtivK;
-          $$->attr.name = copyString(id);/*$1->attr.name;*/
+          $$->attr.name = $1->attr.name;
           printf("%s\n",$$->attr.name);
           $$->child[0] = $3;
           $$->params = params;
           $$->lineno = lineno;
-       }| ID APR FPR{
+       }| fun-id APR FPR{
            $$ = newExpNode(AtivK);
            $$->kind.exp = AtivK;
-           $$->attr.name = copyString(id);
+           $$->attr.name = $1->attr.name;
            $$->params = params;
            $$->lineno = lineno;
          }
