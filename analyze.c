@@ -49,12 +49,13 @@ static void nullProc(TreeNode * t)
  */
 static void insertNode( TreeNode * t)
 {
-  //printf("name: %s, exp: %d, stmt: %d \n",t->attr.name,t->nodekind,t->kind.stmt); // teste .......
+  //printf("name: %s, nodeKind: %d, exp: %d, stmt: %d \n",t->attr.name,t->nodekind,t->kind.exp,t->kind.stmt); // teste .......
   switch (t->nodekind){
     case StmtK:
       switch (t->kind.stmt){
       case AssignK:
         if (st_lookup(t->attr.name) == -1){
+          //printf("AQUI\n");
           /* não encontrado na tabela, cariavel não declarada */
             fprintf(listing,"Erro Semantico: A variavel '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
             Error = TRUE;

@@ -74,7 +74,7 @@ var-dec:  tipo ID PEV {
             $$->kind.exp = VarDeclK;
             $$->lineno = lineno;
           }
-    | error {yyerrok;}
+    | error {yyerror("");}
 ;
 
 tipo: INT {
@@ -379,6 +379,7 @@ args: args VIRG exp {
 %%
 
 int yyerror(char *message){
+    if(yychar == NL || yychar == -2) return 0;
     Error = FALSE;
 
     if(yychar == ERR) printf("Erro léxico na linha %d. Lexema: ", lineno);
@@ -416,7 +417,7 @@ int yyerror(char *message){
         default: /* should never happen */
           fprintf(listing,"Token desconhecido: %d\n",yychar);
    }
-    return 0;
+    exit(-1);
 }
 
 /* yylex calls getToken to make Yacc/Bison output

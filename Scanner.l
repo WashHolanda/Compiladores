@@ -31,7 +31,7 @@ TAB [\t]
 "else"                  {return ELSE;}
 "while"                 {return WHI;}
 {LETRA}+	              { return ID;}
-({LETRA}|{DIGITO})+     {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
+({LETRA}|{DIGITO})+     {if(!flag_coment) return ERR;}
 "+"				              {return SOM;}
 "-"				              {return SUB;}
 "*"				              {return MUL;}
@@ -52,7 +52,7 @@ TAB [\t]
 "["                     {return ACO;}
 "]"                     {return FCO;}
 {TAB}                   {}
-{NEWLINE}               {NL;}
+{NEWLINE}               {return NL;}
 [ ]*                    {}
 {OUTRO}+		            {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
 %%
@@ -62,11 +62,11 @@ TokenType getToken(void)
   TokenType currentToken;
   if (firstTime)
   { firstTime = FALSE;
-    lineno++;
     yyin = source;
     yyout = listing;
   }
   currentToken = yylex();
+  if(currentToken == NL) lineno++;
   if(currentToken == ID) strncpy(id,yytext,MAXTOKENLEN);
   strncpy(tokenString,yytext,MAXTOKENLEN);
   if (TraceScan) {

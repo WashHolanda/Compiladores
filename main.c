@@ -23,7 +23,7 @@
 #endif
 
 /* allocate global variables */
-int lineno = 0;
+int lineno = 1;
 FILE * source;
 FILE * listing;
 FILE * code;

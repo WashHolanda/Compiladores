@@ -124,15 +124,14 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
 /* A função retorna o valor da posição de memoria da variável
  * ou -1 caso a mesma não seja encontrada
  */
-int st_lookup ( char * name)
-{
-  //printf("st_lookup\n");
+int st_lookup ( char * name){
   int h = hash(name);
   BucketList l =  hashTable[h];
-  while ((l != NULL) && !(strcmp(name,l->name) == 0))//|| !(strcmp(scope,l->escopo) == 0))
+  while ((l != NULL) && !(strcmp(name,l->name) == 0)){//|| !(strcmp(scope,l->escopo) == 0))
     l = l->next;
+     printf("%d \n",strcmp(name,l->name));}
   if (l == NULL) return -1;
-  else return l->memloc;
+  else ;l->memloc;
 }
 
 /*
