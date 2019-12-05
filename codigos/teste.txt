@@ -1,6 +1,6 @@
 void main(int c, int b){
 	int d;
-	int d;
+	x=3;
 }
 
 void teste(void){

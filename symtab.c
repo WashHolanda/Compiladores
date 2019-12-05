@@ -127,11 +127,10 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
 int st_lookup ( char * name){
   int h = hash(name);
   BucketList l =  hashTable[h];
-  while ((l != NULL) && !(strcmp(name,l->name) == 0)){//|| !(strcmp(scope,l->escopo) == 0))
+  while ((l != NULL) && !(strcmp(name,l->name) == 0))//|| !(strcmp(scope,l->escopo) == 0))
     l = l->next;
-     printf("%d \n",strcmp(name,l->name));}
   if (l == NULL) return -1;
-  else ;l->memloc;
+  else return l->memloc;
 }
 
 /*
@@ -168,7 +167,7 @@ void printSymTab(FILE * listing)
 {
   //printf("printSymtab\n");
   int i;
-  fprintf(listing,"Nome           Escopo  Tipo ID  Tipo dado  Line Numbers\n");
+  fprintf(listing,"Nome           Escopo  Tipo ID  Tipo dado  Num da linha\n");
   fprintf(listing,"-------------  ------  -------  ---------  ------------\n");
   for (i=0;i<SIZE;++i)
   { if (hashTable[i] != NULL)

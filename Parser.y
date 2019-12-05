@@ -244,6 +244,7 @@ retorno-dec: RET exp PEV{
 
 exp: var ATR exp {
         $$ = newStmtNode(AssignK);
+        $$->kind.stmt = AssignK;
         $$->attr.name= $1->attr.name;
         $$->scope = scope;
         $$->child[0] = $1;
@@ -265,7 +266,7 @@ var: ID {
 ;
 
 exp-simples: exp-soma relacional exp-soma {
-                  $$ = newExpNode(AssignK);
+                  $$ = newStmtNode(AssignK);
                   $$ = $2;
                   $$->child[0] = $1;
                   $$->child[1] = $3;
