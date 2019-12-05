@@ -59,7 +59,20 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
   //printf("st_insert\n");
   int h = hash(name);
   BucketList l =  hashTable[h];
-
+  if(IType == CALL){
+    l = (BucketList) malloc(sizeof(struct BucketListRec));
+    l->name = name;
+    l->lines = (LineList) malloc(sizeof(struct LineListRec));
+    l->lines->lineno = lineno;
+    l->vet = vet;
+    l->memloc = op;
+    l->IType = IType;
+    l->Dtype = DType;
+    l->escopo = escopo;
+    l->lines->next = NULL;
+    l->next = hashTable[h];
+    hashTable[h] = l;
+  }
 
   // Procura a ultima declaração com o mesmo nome
   while ((l != NULL) && ((strcmp(name,l->name) != 0))){
