@@ -67,9 +67,8 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
   }
 
   //Para inserir: não achou outra declaração, se achou verificar se o escopo é DIF e não é uma função
-  if ( l == NULL || (op != 0 && l->escopo != escopo && l->IType != FUN)) /* variable not yet in table */
+  if ( l == NULL || (op != 0 && l->escopo != escopo && l->escopo != "global" && l->IType != FUN)) /* variable not yet in table */
   {
-    //printf("nome: %s, tipo: %d\n",name,IType); //teste.......
     l = (BucketList) malloc(sizeof(struct BucketListRec));
     l->name = name;
     l->lines = (LineList) malloc(sizeof(struct LineListRec));
@@ -95,7 +94,9 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
   }
   else if(l->escopo != escopo && (strcmp(l->escopo,"global") != 0) ){
     //procura por variavel global entes de supor que não existe
-    while ((l != NULL)){
+    fprintf(listing,"Erro: Variavel '%s' já declarada no escopo global.[%d]\n",name, lineno);
+    Error = TRUE;
+    /*while ((l != NULL)){
       if((strcmp(l->escopo, "global")==0)&& ((strcmp( name,l->name) == 0))){
         LineList t = l->lines;
         while (t->next != NULL) t = t->next;
@@ -109,7 +110,7 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
     if(l == NULL){
       fprintf(listing,"Erro: Variavel '%s' não declarada neste escopo.[%d]\n",name, lineno);
       Error = TRUE;
-    }
+    }*/
   }
   else if(op == 0)
   {
@@ -124,13 +125,15 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
 /* A função retorna o valor da posição de memoria da variável
  * ou -1 caso a mesma não seja encontrada
  */
-int st_lookup ( char * name){
+int st_lookup ( char * name, char * escopo){
   int h = hash(name);
   BucketList l =  hashTable[h];
-  while ((l != NULL) && !(strcmp(name,l->name) == 0))//|| !(strcmp(scope,l->escopo) == 0))
-    l = l->next;
+  while ((l != NULL) && (strcmp(name,l->name) != 0) && !(strcmp(escopo,l->escopo) == 0)){
+    l = l->next;}
   if (l == NULL) return -1;
-  else return l->memloc;
+  else {
+    return 0;
+    }
 }
 
 /*

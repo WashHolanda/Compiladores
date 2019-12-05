@@ -66,9 +66,9 @@ int main( int argc, char * argv[] )
 #if !NO_ANALYZE7 
   if (TraceAnalyze) fprintf(listing,"\nConstruindo Tabela de Simbolos...\n");
     buildSymtab(syntaxTree);
-   if (TraceAnalyze) fprintf(listing,"\nChecando Tipos...\n");
-    typeCheck(syntaxTree);
-   if (TraceAnalyze) fprintf(listing,"\nType Compilação Concluida!\n"); 
+   //if (TraceAnalyze) fprintf(listing,"\nChecando Tipos...\n");
+    //typeCheck(syntaxTree);
+   if (TraceAnalyze) fprintf(listing,"\nCompilação Concluida!\n"); 
 
 #if !NO_CODE
    if (!Error){

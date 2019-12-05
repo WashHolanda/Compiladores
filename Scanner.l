@@ -7,6 +7,7 @@ char tokenString[MAXTOKENLEN+1];
 char id[MAXTOKENLEN+1];
 char func[MAXTOKENLEN+1];
 extern int yylex(void);
+void novalinha();
 
 int flag_coment = 0;
 int num_lines = 0;
@@ -52,10 +53,14 @@ TAB [\t]
 "["                     {return ACO;}
 "]"                     {return FCO;}
 {TAB}                   {}
-{NEWLINE}               {return NL;}
+{NEWLINE}               {novalinha();}
 [ ]*                    {}
 {OUTRO}+		            {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
 %%
+
+void novalinha(){
+  lineno ++;
+}
 
 TokenType getToken(void)
 { static int firstTime = TRUE;
@@ -66,7 +71,6 @@ TokenType getToken(void)
     yyout = listing;
   }
   currentToken = yylex();
-  if(currentToken == NL) lineno++;
   if(currentToken == ID) strncpy(id,yytext,MAXTOKENLEN);
   strncpy(tokenString,yytext,MAXTOKENLEN);
   if (TraceScan) {

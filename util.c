@@ -142,31 +142,31 @@ static void printSpaces(void)
            printToken(tree->attr.op,"\0");
            break;
          case ConstK:
-           fprintf(listing,"Const: %d Escopo: %s\n",tree->attr.val,tree->scope);
+           fprintf(listing,"Const: %d\n",tree->attr.val);
            break;
          case IdK:
-           fprintf(listing,"Id: %s Escopo: %s\n",tree->attr.name,tree->scope);
+           fprintf(listing,"Id: %s\n",tree->attr.name);
            break;
          case VarDeclK:
-           fprintf(listing,"Var: %s Escopo: %s\n",tree->attr.name, tree->scope);
+           fprintf(listing,"Var: %s\n",tree->attr.name);
            break;
          case FunDeclK:
-           fprintf(listing,"Func: %s Escopo: %s\n",tree->attr.name,tree->scope);
+           fprintf(listing,"Func: %s\n",tree->attr.name);
            break;
          case AtivK:
-           fprintf(listing,"Chamada da Função: %s Escopo: %s\n",tree->attr.name,tree->scope);
+           fprintf(listing,"Chamada da Função: %s\n",tree->attr.name);
            break;
          case TypeK:
            fprintf(listing,"Tipo: %s\n",tree->attr.name);
            break;
           case ParamK:
-           fprintf(listing,"Parametro: %s Escopo: %s\n",tree->attr.name,tree->scope);
+           fprintf(listing,"Parametro: %s\n",tree->attr.name);
            break; 
           case VetorK:
-          fprintf(listing, "Vetor: %s Escopo: %s\n", tree->attr.name,tree->scope);
+          fprintf(listing, "Vetor: %s", tree->attr.name);
 	        break;
           default:
-           fprintf(listing,"Unknown ExpNode kind: %d Escopo: %s\n", tree->nodekind,tree->scope);
+           fprintf(listing,"Unknown ExpNode kind: %d\n", tree->nodekind);
            break;
        }
      }

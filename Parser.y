@@ -53,7 +53,7 @@ lista-dec:  lista-dec declaracao {
           }| declaracao { $$ = $1; }
 ;
 
-declaracao:  var-dec { $$ = $1 ;} | fun-dec { $$ = $1; char *aux="teste"; $$->scope=aux}
+declaracao:  var-dec { $$ = $1;} | fun-dec { $$ = $1;}
 ;
 
 var-dec:  tipo ID PEV {
@@ -95,14 +95,11 @@ fun-id:  ID {
             $$->kind.exp = IdK; }
 ;
 fun-dec: tipo fun-id APR parametros FPR escopo{
-              char
               $$ = newExpNode(FunDeclK);
               $$->kind.exp = FunDeclK;
               $$->attr.name = $2->attr.name;
               $$->child[0] = $1;
               $$->type = $1->type;
-              $$->scope = aux;
-              aux = $2->attr.name;
               $$->child[1] = $4;
               $$->child[2] = $6;
               $$->lineno = lineno;
@@ -134,7 +131,6 @@ lista-parametros: lista-parametros VIRG lista-parametros {
 tipo-parametro: tipo ID {
           $$ = newExpNode(ParamK);
           $$->attr.name = copyString(id);
-          $$->scope = scope;
           $$->kind.exp = ParamK;
           $$->size = 0;
           $$->lineno = lineno;
@@ -144,7 +140,6 @@ tipo-parametro: tipo ID {
          $$ = newExpNode(ParamK);
           $$->child[0] = $1;
           $$->attr.name = copyString(id);
-          $$->scope = scope;
           $$->kind.exp = ParamK;
           $$->size = 0;
           $$->lineno = lineno;
@@ -209,7 +204,6 @@ sel-dec: IF APR exp FPR dec-interna {
             $$->attr.name = "IF";
             $$->child[0] = $3;
             $$->child[1] = $5;
-            $$->scope = $3->scope;
             $$->lineno = lineno;
             $$->kind.stmt = IfK;
           }
@@ -344,22 +338,22 @@ mult: MUL {
 
 fator: APR exp FPR { $$ = $2; } 
      | var { $$ = $1; }
-     | ativacao { $$ = $1;
-        params = 0; }
+     | ativacao { $$ = $1; params = 0; }
      | NUM { $$ = $1; }
 ;
 
 ativacao: ID APR args FPR {
           $$ = newExpNode(AtivK);
-          $$->attr.name = copyString(id);
-          $$->scope = scope;
+          $$->kind.exp = AtivK;
+          $$->attr.name = copyString(id);/*$1->attr.name;*/
+          printf("%s\n",$$->attr.name);
           $$->child[0] = $3;
           $$->params = params;
           $$->lineno = lineno;
        }| ID APR FPR{
            $$ = newExpNode(AtivK);
+           $$->kind.exp = AtivK;
            $$->attr.name = copyString(id);
-           $$->scope = scope;
            $$->params = params;
            $$->lineno = lineno;
          }
@@ -383,8 +377,7 @@ args: args VIRG exp {
 %%
 
 int yyerror(char *message){
-    if(yychar == NL || yychar == -2) return 0;
-    Error = FALSE;
+    Error = TRUE;
 
     if(yychar == ERR) printf("Erro léxico na linha %d. Lexema: ", lineno);
     else printf("Erro sintático na linha %d. Token: ", lineno);
