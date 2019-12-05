@@ -377,6 +377,7 @@ args: args VIRG exp {
 %%
 
 int yyerror(char *message){
+    if(yychar == -2) return 0;
     Error = TRUE;
 
     if(yychar == ERR) printf("Erro léxico na linha %d. Lexema: ", lineno);
@@ -414,7 +415,7 @@ int yyerror(char *message){
         default: /* should never happen */
           fprintf(listing,"Token desconhecido: %d\n",yychar);
    }
-    exit(-1);
+    return 0;
 }
 
 /* yylex calls getToken to make Yacc/Bison output

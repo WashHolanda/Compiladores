@@ -54,17 +54,19 @@ int main( int argc, char * argv[] )
   }
   listing = stdout; /* send listing to screen */
   fprintf(listing,"\nCOMPILAÇÃO DO ARQUIVO C-: %s\n",pgm);
+
+
 #if NO_PARSE
   while (getToken()!=ENDFILE);
 #else
   syntaxTree = parse();
   if (TraceParse) {
+    if(Error == TRUE) exit(-1);
     fprintf(listing,"\nÁrvore Sintática:\n");
     printTree(syntaxTree);
 
 
 #if !NO_ANALYZE7 
-
   if (TraceAnalyze) fprintf(listing,"\nConstruindo Tabela de Simbolos...\n");
     buildSymtab(syntaxTree);
    //if (TraceAnalyze) fprintf(listing,"\nChecando Tipos...\n");
