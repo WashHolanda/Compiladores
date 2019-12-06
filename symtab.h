@@ -3,22 +3,15 @@
 
 #include "globals.h"
 
-/* Procedure st_insert inserts line numbers and
- * memory locations into the symbol table
- * loc = memory location is inserted only the
- * first time, otherwise ignored
- */
+/* Procedure st_insert inserts line numbers and memory locations into the symbol table
+ * loc = memory location is inserted only the first time, otherwise ignored */
  void st_insert( char * name, int lineno, int loc, char* escopo, dataTypes Dtype, IDTypes IType, int vet);
 
-/* Function st_lookup returns the memory
- * location of a variable or -1 if not found
- */
+/* Função st_lookup retorna a posição da memória de uma variável ou -1 se não encontrar */
 int st_lookup ( char * name, char * escopo);
 
-/* Procedure printSymTab prints a formatted
- * listing of the symbol table contents
- * to the listing file
- */
+/* O procedimento printSymTab imprime uma lista formatada do conteúdo da tabela de símbolos no
+ arquivo de listagem */
 void printSymTab(FILE * listing);
 
 void busca_main ();

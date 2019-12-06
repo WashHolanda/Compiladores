@@ -4,14 +4,10 @@
 
 void UpdateScope(TreeNode * t);
 
-/* Function buildSymtab constructs the symbol
- * table by preorder traversal of the syntax tree
- */
+/* A função buildSymtab constrói a tabela de símbolos pela passagem de pré-ordem da árvore sintática */
 void buildSymtab(TreeNode *);
 
-/* Procedure typeCheck performs type checking
- * by a postorder syntax tree traversal
- */
+/* O procedimento typeCheck executa a verificação de tipo pela passagem da árvore sintática de pós-ordem */
 void typeCheck(TreeNode *);
 
 void checkNode(TreeNode * t);
