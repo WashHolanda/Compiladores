@@ -22,7 +22,7 @@ int params = 0;
 //Alfabeto de Tokens recebidos pelo Parser
 %start init
 %token IF ELSE WHI RET VOID
-%right INT
+%token INT
 %token ATR PEV ACH FCH ACO FCO MAIO MENO MAIG MEIG DIF IGL VIRG TB LINE SPACE NL
 %token FIM ERR
 %token ID NUM 
@@ -252,9 +252,9 @@ var: ID {
         $$ = newExpNode(IdK);
         $$->attr.name = copyString(id);
         $$->lineno = lineno;
-  } |ID ACO exp FCO {
+  } |fun-id ACO exp FCO {
         $$ = newExpNode(IdK);
-        $$->attr.name = copyString(id);
+        $$->attr.name = $1->attr.name;;
         $$->child[0] = $3;
         $$->lineno = lineno;
         }
@@ -346,7 +346,6 @@ ativacao: fun-id APR args FPR {
           $$ = newExpNode(AtivK);
           $$->kind.exp = AtivK;
           $$->attr.name = $1->attr.name;
-          printf("%s\n",$$->attr.name);
           $$->child[0] = $3;
           $$->params = params;
           $$->lineno = lineno;
