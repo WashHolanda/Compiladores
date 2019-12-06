@@ -10,11 +10,8 @@ char* escopo = "global";
 void UpdateScope(TreeNode * t){
   if (t != NULL && t->kind.exp == FunDeclK) escopo = t->attr.name;
 }
-/* Procedure traverse is a generic recursive
- * syntax tree traversal routine:
- * it applies preProc in preorder and postProc
- * in postorder to tree pointed to by t
- */
+/* Procedure traverse is a generic recursive syntax tree traversal routine: it applies preProc in
+preorder and postProc in postorder to tree pointed to by t */
 static void traverse( TreeNode * t,
                void (* preProc) (TreeNode *),
                void (* postProc) (TreeNode *) )
@@ -40,23 +37,17 @@ static void nullProc(TreeNode * t)
   else return;
 }
 
-/* Procedure insertNode inserts
- * identifiers stored in t into
- * the symbol table
- */
-static void insertNode( TreeNode * t)
-{
-  //printf("[%d]name: %s, nodeKind: %d, exp: %d, stmt: %d \n",t->lineno,t->attr.name,t->nodekind,t->kind.exp,t->kind.stmt); // teste .......
+/* O procedimento insertNode insere identificadores armazenados em t na tabela de símbolos */
+static void insertNode( TreeNode * t) {
   switch (t->nodekind){
     case StmtK:
       switch (t->kind.stmt){
       case AssignK:
         if (st_lookup(t->attr.name, escopo) == -1){
-          /* não encontrado na tabela, cariavel não declarada */
+          /* não encontrado na tabela, variavel não declarada */
             fprintf(listing,"Erro Semantico: A variavel '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
             Error = TRUE;
-          } /* encontrada na tabela, verificar escopo e adicionar linha */
-         // else st_insert(t->attr.name,t->lineno,0,escopo,INTTYPE,VAR,t->vet);
+          }
         break;
       default:
         break;
@@ -71,14 +62,14 @@ static void insertNode( TreeNode * t)
             st_insert(t->attr.name,t->lineno,location++, escopo,INTTYPE, VAR , t->vet);
           else
           /* encontrado na tabela, verificar escopo */
-            //fprintf(listing,"Erro: Nome da variavel '%s' já utilizada como nome de função.[%d]\n",t->attr.name, t->lineno);
             st_insert(t->attr.name,t->lineno,0, escopo,INTTYPE, VAR, t->vet);
           break;
         case FunDeclK:
           if (st_lookup(t->attr.name,escopo) == -1){
+            /* não encontrado na tabela, inserir*/
             st_insert(t->attr.name,t->lineno,location++, "global",t->type,FUN, t->vet);}
           else
-          /* encontrado na tabela, verificar escopo */
+          /* encontrado na tabela, erro semântico */
             fprintf(listing,"Erro Semantico: Multiplas declarações da função '%s'. [%d]\n", t->attr.name, t->lineno);
           break;
         case ParamK:

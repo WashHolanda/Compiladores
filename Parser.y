@@ -102,7 +102,7 @@ fun-dec: tipo fun-id APR parametros FPR escopo{
               $$->type = $1->type;
               $$->child[1] = $4;
               $$->child[2] = $6;
-              $$->lineno = lineno;
+              $$->lineno = $2->lineno;
             }
 ;
 
