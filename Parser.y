@@ -65,7 +65,7 @@ var-dec:  tipo ID PEV {
             $$->kind.exp = VarDeclK;
             $$->lineno = lineno;
           }
-    | tipo ID ACO NUM FCO PEV {
+    | tipo fun-id ACO NUM FCO PEV {
             $$ = newExpNode(VetorK);
             $$->attr.name = copyString(id);
             $$->child[0] = $1;
@@ -254,7 +254,7 @@ var: ID {
         $$->lineno = lineno;
   } |fun-id ACO exp FCO {
         $$ = newExpNode(IdK);
-        $$->attr.name = $1->attr.name;;
+        $$->attr.name = $1->attr.name;
         $$->child[0] = $3;
         $$->lineno = lineno;
         }

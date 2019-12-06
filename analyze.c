@@ -56,13 +56,10 @@ static void insertNode( TreeNode * t) {
     case ExpK:
       switch(t->kind.exp){
         case VarDeclK:
-          st_insert(t->attr.name,t->lineno,location++,escopo,INTTYPE, VAR, t->vet);
+          st_insert(t->attr.name,t->lineno,location++,escopo,INTTYPE, VAR, t->vet); 
           if (st_lookup(t->attr.name, escopo) == -1)
           /* não encontrado na tabela, inserir*/
             st_insert(t->attr.name,t->lineno,location++, escopo,INTTYPE, VAR , t->vet);
-          else
-          /* encontrado na tabela, verificar escopo */
-            st_insert(t->attr.name,t->lineno,0, escopo,INTTYPE, VAR, t->vet);
           break;
         case FunDeclK:
           if (st_lookup(t->attr.name,escopo) == -1){
@@ -95,14 +92,15 @@ static void insertNode( TreeNode * t) {
           }
           break;
         case AtivK:
+          st_insert(t->attr.name,t->lineno,location++,escopo,NULLL,CALL, t->vet);
           if (st_lookup(t->attr.name, escopo) == -1 && strcmp(t->attr.name, "input")!=0 && strcmp(t->attr.name, "output")!=0){
             fprintf(listing,"Erro Semântico: A função '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
-            st_insert(t->attr.name,t->lineno,0,escopo,NULLL,CALL, t->vet);
+            st_insert(t->attr.name,t->lineno,location++,escopo,NULLL,CALL, t->vet);
             Error = TRUE;
           }
-          else {
+          /*else {
             st_insert(t->attr.name,t->lineno,0,escopo,NULLL,CALL, t->vet);
-          }
+          }*/
           break;
         default:
           break;
