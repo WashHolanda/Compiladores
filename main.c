@@ -56,6 +56,8 @@ int main( int argc, char * argv[] ) {
 #else
   syntaxTree = parse();
   if (TraceParse) {
+    if(Error == TRUE)
+      exit(-1);
     fprintf(listing,"\nÁrvore Sintática:\n");
     printTree(syntaxTree);
 

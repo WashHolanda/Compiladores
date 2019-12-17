@@ -72,7 +72,7 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
   }
 
   //Para inserir: não achou outra declaração, se achou verificar se o escopo é DIF e não é uma função
-  if ( l == NULL || (op != 0 && l->escopo != escopo && l->escopo != "global" && l->IType != FUN)) { /* variável não está na tabela ainda */
+  if ( l == NULL || (op != 0 && l->escopo != escopo && l->escopo != "global" && l->IType != FUN && l->IType != CALL)) { /* variável não está na tabela ainda */
     l = (BucketList) malloc(sizeof(struct BucketListRec));
     l->name = name;
     l->lines = (LineList) malloc(sizeof(struct LineListRec));
@@ -86,12 +86,11 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
     l->next = hashTable[h];
     hashTable[h] = l;
   }
-
-  else if( l->IType == FUN  && IType == VAR){
+  else if( (l->IType == FUN  && IType == VAR) || (l->IType == CALL  && IType == VAR)){
     fprintf(listing,"Erro: Nome da variavel '%s' já utilizada como nome de função.[%d]\n",name, lineno);
     Error = TRUE;
   }
-  else if( l->escopo == escopo && op != 0){
+  else if( l->escopo == escopo && op != 0 ){
     fprintf(listing,"Erro: Variavel '%s' já declarada neste escopo.[%d]\n",name, lineno);
     Error = TRUE;
   }
@@ -128,7 +127,7 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
 int st_lookup ( char * name, char * escopo){
   int h = hash(name);
   BucketList l =  hashTable[h];
-  while ((l != NULL) && (strcmp(name,l->name) != 0) && !(strcmp(escopo,l->escopo) == 0)){
+  while ((l != NULL) && (strcmp(name,l->name) != 0) && (strcmp(escopo,l->escopo) != 0)){
     l = l->next;}
   if (l == NULL) return -1;
   else {

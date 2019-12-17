@@ -92,15 +92,15 @@ static void insertNode( TreeNode * t) {
           }
           break;
         case AtivK:
-          st_insert(t->attr.name,t->lineno,location++,escopo,NULLL,CALL, t->vet);
+          //st_insert(t->attr.name,t->lineno,location++,escopo,NULLL,CALL, t->vet);/*se eu coloco 0 dá certo sem o erro do xyz não declarado*/
           if (st_lookup(t->attr.name, escopo) == -1 && strcmp(t->attr.name, "input")!=0 && strcmp(t->attr.name, "output")!=0){
             fprintf(listing,"Erro Semântico: A função '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
-            st_insert(t->attr.name,t->lineno,location++,escopo,NULLL,CALL, t->vet);
+            //st_insert(t->attr.name,t->lineno,0,escopo,NULLL,CALL, t->vet);
             Error = TRUE;
           }
-          /*else {
+          else {
             st_insert(t->attr.name,t->lineno,0,escopo,NULLL,CALL, t->vet);
-          }*/
+          }
           break;
         default:
           break;
