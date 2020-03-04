@@ -58,12 +58,8 @@ int main( int argc, char * argv[] ) {
 #else
   syntaxTree = parse();
   if (TraceParse) {
-<<<<<<< HEAD
-    if(Error == TRUE) exit(-1);
-=======
     if(Error == TRUE)
       exit(-1);
->>>>>>> 0224f72ec367c7265d3c392d6f219b78ab8ee2b8
     fprintf(listing,"\nÁrvore Sintática:\n");
     printTree(syntaxTree);
 
