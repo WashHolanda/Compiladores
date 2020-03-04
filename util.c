@@ -3,14 +3,9 @@
 
 #include "globals.h"
 #include "util.h"
-/* Variable indentno is used by printTree to
- * store current number of spaces to indent
- */
+/* Variável indentno é usado pelo printTree para armazenar o número atual de espaços para identação */
 static int indentno = 0;
 
-/* Procedure printToken prints a token
- * and its lexeme to the listing file
- */
  void printToken( TokenType token, const char* tokenString )
  { switch (token)
    { case IF:   fprintf(listing,"%s\n",tokenString);break;
@@ -40,19 +35,16 @@ static int indentno = 0;
      case DIV: fprintf(listing,"/\n"); break;
      case FIM: fprintf(listing,"EOF\n"); break;
      case NUM: fprintf(listing,"NUM, val = %s\n",tokenString);break;
-     case ID:  fprintf(listing,"ID, name = %s\n",tokenString);break;
+     case ID:  fprintf(listing,"ID, nome = %s\n",tokenString);break;
      case ERR:
        fprintf(listing,
            "%s\n",tokenString);
        break;
-     default: /* should never happen */
-       fprintf(listing,"Unknown token: %d\n",token);
+     default: /* Nunca deve acontecer */
+       fprintf(listing,"Token Desconhecido: %d\n",token);
    }
  }
 
-/* Function newStmtNode creates a new statement
- * node for syntax tree construction
- */
 TreeNode * newStmtNode(StmtKind kind)
 { TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
   int i;
@@ -68,9 +60,6 @@ TreeNode * newStmtNode(StmtKind kind)
   return t;
 }
 
-/* Function newExpNode creates a new expression
- * node for syntax tree construction
- */
 TreeNode * newExpNode(ExpKind kind)
 { TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
   int i;
@@ -87,9 +76,6 @@ TreeNode * newExpNode(ExpKind kind)
   return t;
 }
 
-/* Function copyString allocates and makes a new
- * copy of an existing string
- */
 char * copyString(char * s)
 { int n;
   char * t;
@@ -108,9 +94,7 @@ static void printSpaces(void)
   for (i=0;i<indentno;i++)
     fprintf(listing," ");
 }
-/* procedure printTree prints a syntax tree to the
- * listing file using indentation to indicate subtrees
- */
+
  void printTree( TreeNode * tree )
  { int i;
    INDENT;

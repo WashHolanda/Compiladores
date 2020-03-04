@@ -6,23 +6,11 @@
 #include <ctype.h>
 #include <string.h>
 
-/* Yacc/Bison generates internally its own values
- * for the tokens. Other files can access these values
- * by including the tab.h file generated using the
- * Yacc/Bison option -d ("generate header")
- *
- * The YYPARSER flag prevents inclusion of the tab.h
- * into the Yacc/Bison output itself
- */
-
 #ifndef YYPARSER
 
-/* the name of the following file may change */
 #include "Parser.tab.h"
 
-/* ENDFILE is implicitly defined by Yacc/Bison,
- * and not included in the tab.h file
- */
+/* ENDFILE é definido implicitamente pelo Yacc/Bison, e não está incluso no arquivo tab.h file */
 #define ENDFILE 0
 
 #endif
@@ -35,15 +23,13 @@
 #define TRUE 1
 #endif
 
-/* MAXRESERVED = the number of reserved words */
+/* MAXRESERVED = o número de palavras reservadas */
 #define MAXRESERVED 8
 
-/* Yacc/Bison generates its own integer values
- * for tokens
- */
+/* Yacc/Bison gera os próprios valores inteiros para os tokens */
 typedef int TokenType;
 
-extern FILE* source; /* source code text file */
+extern FILE* source; /* arquivo texto do código fonte */
 extern FILE* listing; /* listing output text file */
 extern FILE* code; /* code text file for TM simulator */
 
@@ -57,15 +43,15 @@ typedef enum {StmtK,ExpK} NodeKind;
 typedef enum {IfK,WhileK,AssignK,ReturnK} StmtKind;
 typedef enum {OpK,ConstK,IdK,VarDeclK,VetDeclK,FunDeclK,AtivK,TypeK,VetorK,ParamK} ExpKind;
 
-/* ExpType is used for type checking */
+/* ExpType é usado para checagem de tipo */
 typedef enum {Void,Integer,Boolean} ExpType;
 typedef enum {INTTYPE, VOIDTYPE, NULLL} dataTypes;
 typedef enum {VAR, FUN, CALL, VET} IDTypes;
 
 #define MAXCHILDREN 3
 
-typedef struct treeNode
-   { struct treeNode * child[MAXCHILDREN];
+typedef struct treeNode {
+  struct treeNode * child[MAXCHILDREN];
      struct treeNode * sibling;
      int lineno;
      int size;
@@ -83,7 +69,7 @@ typedef struct treeNode
      int vet;
      int declared;
      int params;
-     dataTypes type; /* for type checking of exps */
+     dataTypes type; /* para checagem de tipo das exps */
    } TreeNode;
 
 /**************************************************/
@@ -96,28 +82,22 @@ typedef struct treeNode
  */
 extern int EchoSource;
 
-/* TraceScan = TRUE causes token information to be
- * printed to the listing file as each token is
- * recognized by the scanner
- */
+/* TraceScan = TRUE faz com que as informações do token sejam impressas no arquivo de listagem,
+pois cada token é reconhecido pelo scanner */
 extern int TraceScan;
 
-/* TraceParse = TRUE causes the syntax tree to be
- * printed to the listing file in linearized form
- * (using indents for children)
+/* TraceParse = TRUE faz com que a árvore sintática seja impressa no arquivo de listagem na
+forma linearizada (usando recuos para filhos)
  */
 extern int TraceParse;
 
-/* TraceAnalyze = TRUE causes symbol table inserts
- * and lookups to be reported to the listing file
- */
+/* TraceAnalyze = TRUE faz com que inserções e pesquisas da tabela de símbolos sejam relatadas
+ao arquivo de listagem */
 extern int TraceAnalyze;
 
-/* TraceCode = TRUE causes comments to be written
- * to the TM code file as code is generated
- */
+/* TraceCode = TRUE causes comments to be written to the TM code file as code is generated */
 extern int TraceCode;
 
-/* Error = TRUE prevents further passes if an error occurs */
+/* Error = TRUE evita passagens adicionais se ocorrer um erro */
 extern int Error;
 #endif

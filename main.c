@@ -5,9 +5,7 @@
 /* set NO_ANALYZE to TRUE to get a parser-only compiler */
 #define NO_ANALYZE FALSE
 
-/* set NO_CODE to TRUE to get a compiler that does not
- * generate code
- */
+/* set NO_CODE to TRUE to get a compiler that does not generate code */
 #define NO_CODE FALSE
 
 #include "util.h"
@@ -34,22 +32,21 @@ int TraceScan = FALSE;
 int TraceParse = TRUE;
 int TraceAnalyze = TRUE;
 int TraceCode = FALSE;
-
 int Error = FALSE;
 
-int main( int argc, char * argv[] )
-{ TreeNode * syntaxTree;
-  char pgm[120]; /* source code file name */
-  if (argc != 2)
-    { fprintf(stderr,"Arquivo não especificado.\n Uso: %s <caminho do arquivo>\n",argv[0]);
-      exit(1);
-    }
+int main( int argc, char * argv[] ) {
+  TreeNode * syntaxTree;
+  char pgm[120]; /* nome do arquivo do código fonte */
+  if (argc != 2) {
+    fprintf(stderr,"Arquivo não especificado.\n Uso: %s <caminho do arquivo>\n",argv[0]);
+    exit(1);
+  }
   strcpy(pgm,argv[1]) ;
   if (strchr (pgm, '.') == NULL)
      strcat(pgm,".tny");
   source = fopen(pgm,"r");
-  if (source==NULL)
-  { fprintf(stderr,"Arquivo %s não encontrado.\n",pgm);
+  if (source==NULL) {
+    fprintf(stderr,"Arquivo %s não encontrado.\n",pgm);
     exit(1);
   }
   listing = stdout; /* send listing to screen */
@@ -61,7 +58,12 @@ int main( int argc, char * argv[] )
 #else
   syntaxTree = parse();
   if (TraceParse) {
+<<<<<<< HEAD
     if(Error == TRUE) exit(-1);
+=======
+    if(Error == TRUE)
+      exit(-1);
+>>>>>>> 0224f72ec367c7265d3c392d6f219b78ab8ee2b8
     fprintf(listing,"\nÁrvore Sintática:\n");
     printTree(syntaxTree);
 
@@ -69,7 +71,7 @@ int main( int argc, char * argv[] )
 #if !NO_ANALYZE7 
   if (TraceAnalyze) fprintf(listing,"\nConstruindo Tabela de Simbolos...\n");
     buildSymtab(syntaxTree);
-   //if (TraceAnalyze) fprintf(listing,"\nChecando Tipos...\n");
+    //if (TraceAnalyze) fprintf(listing,"\nChecando Tipos...\n");
     //typeCheck(syntaxTree);
    if (TraceAnalyze) fprintf(listing,"\nCompilação Concluida!\n"); 
 
@@ -81,8 +83,8 @@ int main( int argc, char * argv[] )
     strncpy(codefile,pgm,fnlen);
     //strcat(codefile,"_binary.txt");
     code = fopen(codefile,"w");
-    if (code == NULL)
-    { printf("Unable to open %s\n",codefile);
+    if (code == NULL) {
+      printf("Unable to open %s\n",codefile);
       exit(1);
     }/*
     fprintf(listing,"\nCreating Intermediate Code...\n");

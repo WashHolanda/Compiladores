@@ -2,7 +2,7 @@
 #include "globals.h"
 #include "util.h"
 #include "scan.h"
-/* lexeme of identifier or reserved word */
+/* Lexema do identificador ou palavra reservada */
 char tokenString[MAXTOKENLEN+1];
 char id[MAXTOKENLEN+1];
 char func[MAXTOKENLEN+1];
@@ -55,7 +55,7 @@ TAB [\t]
 {TAB}                   {}
 {NEWLINE}               {novalinha();}
 [ ]*                    {}
-{OUTRO}+		            {if(!flag_coment) printf("Erro Léxico na linha %d. Lexema: %s\n",num_lines,yytext);return ERR;}
+{OUTRO}+		            {if(!flag_coment) return ERR;}
 %%
 
 void novalinha(){

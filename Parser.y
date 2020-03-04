@@ -22,7 +22,7 @@ int params = 0;
 //Alfabeto de Tokens recebidos pelo Parser
 %start init
 %token IF ELSE WHI RET VOID
-%right INT
+%token INT
 %token ATR PEV ACH FCH ACO FCO MAIO MENO MAIG MEIG DIF IGL VIRG TB LINE SPACE NL
 %token FIM ERR
 %token ID NUM 
@@ -65,7 +65,7 @@ var-dec:  tipo ID PEV {
             $$->kind.exp = VarDeclK;
             $$->lineno = lineno;
           }
-    | tipo ID ACO NUM FCO PEV {
+    | tipo fun-id ACO NUM FCO PEV {
             $$ = newExpNode(VetorK);
             $$->attr.name = copyString(id);
             $$->child[0] = $1;
@@ -102,7 +102,7 @@ fun-dec: tipo fun-id APR parametros FPR escopo{
               $$->type = $1->type;
               $$->child[1] = $4;
               $$->child[2] = $6;
-              $$->lineno = lineno;
+              $$->lineno = $2->lineno;
             }
 ;
 
@@ -252,9 +252,9 @@ var: ID {
         $$ = newExpNode(IdK);
         $$->attr.name = copyString(id);
         $$->lineno = lineno;
-  } |ID ACO exp FCO {
+  } |fun-id ACO exp FCO {
         $$ = newExpNode(IdK);
-        $$->attr.name = copyString(id);
+        $$->attr.name = $1->attr.name;
         $$->child[0] = $3;
         $$->lineno = lineno;
         }
@@ -346,7 +346,6 @@ ativacao: fun-id APR args FPR {
           $$ = newExpNode(AtivK);
           $$->kind.exp = AtivK;
           $$->attr.name = $1->attr.name;
-          printf("%s\n",$$->attr.name);
           $$->child[0] = $3;
           $$->params = params;
           $$->lineno = lineno;
