@@ -31,7 +31,8 @@ typedef struct LineListRec {
  */
 typedef struct BucketListRec { 
   char * name;
-  dataTypes Dtype;
+  dataTypes RetType;
+  dataTypes StmtType;
   IDTypes IType;
   char* escopo;
   LineList lines;
@@ -48,7 +49,7 @@ static BucketList hashTable[SIZE];
  * loc = memory location is inserted only the
  * first time, otherwise ignored
  */
-void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, IDTypes IType, int vet ){
+void st_insert( char * name, int lineno, int op, char* escopo, dataTypes RetType, dataTypes StmtType, IDTypes IType, int vet ){
   int h = hash(name);
   BucketList l =  hashTable[h];
   if(IType == CALL){
@@ -59,7 +60,8 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
     l->vet = vet;
     l->memloc = op;
     l->IType = IType;
-    l->Dtype = DType;
+    l->RetType = RetType;
+    l->StmtType = StmtType;
     l->escopo = escopo;
     l->lines->next = NULL;
     l->next = hashTable[h];
@@ -80,7 +82,8 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
     l->vet = vet;
     l->memloc = op;
     l->IType = IType;
-    l->Dtype = DType;
+    l->RetType = RetType;
+    l->StmtType = StmtType;
     l->escopo = escopo;
     l->lines->next = NULL;
     l->next = hashTable[h];
@@ -98,7 +101,8 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
     //procura por variavel global antes de supor que não existe
     fprintf(listing,"Erro: Variavel '%s' já declarada no escopo global.[%d]\n",name, lineno);
     Error = TRUE;
-    /*while ((l != NULL)){
+  }else if(l->escopo != escopo){
+    while ((l != NULL)){
       if((strcmp(l->escopo, "global")==0)&& ((strcmp( name,l->name) == 0))){
         LineList t = l->lines;
         while (t->next != NULL) t = t->next;
@@ -112,7 +116,7 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes DType, 
     if(l == NULL){
       fprintf(listing,"Erro: Variavel '%s' não declarada neste escopo.[%d]\n",name, lineno);
       Error = TRUE;
-    }*/
+    }
   }
   else if(op == 0)
   {
@@ -146,20 +150,50 @@ void busca_main () {
     Error = TRUE;
   }
 }
+
+dataTypes getFunStmt(char* nome){
+  int h = hash(nome);
+  BucketList l =  hashTable[h];
+  while ((l != NULL)){
+    if (strcmp(nome,l->name) == 0){
+      if (l->IType == FUN) break;
+    }
+    l = l->next;
+  }
+  if (l == NULL) return -1;
+  else return l->StmtType;
+}
+
+int checkReturn(char* escopo){
+  char nome[6] = "return";
+  int h = hash(nome);
+  BucketList l =  hashTable[h];
+  while ((l != NULL)){
+    if (strcmp(nome,l->name) == 0){
+      if (strcmp(escopo,l->escopo) == 0) return 1;
+    }
+    l = l->next;
+  }
+  return -1;
+}
+
 dataTypes getFunType(char* nome){
   int h = hash(nome);
   BucketList l =  hashTable[h];
-  while ((l != NULL) && (strcmp(nome,l->name) != 0))
+  while ((l != NULL)){
+    if (strcmp(nome,l->name) == 0){
+      if (l->IType == FUN) break;
+    }
     l = l->next;
-
+  }
   if (l == NULL) return -1;
-  else return l->Dtype;
+  else return l->RetType;
 }
 
 void printSymTab(FILE * listing) {
   int i;
-  fprintf(listing,"Nome           Escopo  Tipo ID  Tipo dado  Num da linha\n");
-  fprintf(listing,"-------------  ------  -------  ---------  ------------\n");
+  fprintf(listing,"Nome           Escopo  Tipo ID  Tipo Retorno  Tipo Param  Num da linha\n");
+  fprintf(listing,"-------------  ------  -------  ------------  ----------  ------------\n");
   for (i=0;i<SIZE;++i) {
     if (hashTable[i] != NULL) {
       BucketList l = hashTable[i];
@@ -169,6 +203,9 @@ void printSymTab(FILE * listing) {
         fprintf(listing,"%-6s  ",l->escopo);
         char* id, *data;
         switch(l->IType){
+          case RETT:
+            id = "ret";
+          break;
           case VAR:
             id = "var";
           break;
@@ -184,7 +221,7 @@ void printSymTab(FILE * listing) {
           default:
           break;
         }
-        switch(l->Dtype){
+        switch(l->RetType){
           case INTTYPE:
             data= "INT";
           break;
@@ -198,7 +235,22 @@ void printSymTab(FILE * listing) {
           break;
         }
         fprintf(listing,"%-7s  ",id);
-        fprintf(listing,"%-8s  ",data);
+        fprintf(listing,"%-12s  ",data);
+
+        switch(l->StmtType){
+          case INTTYPE:
+            data= "INT";
+          break;
+          case VOIDTYPE:
+            data= "VOID";
+          break;
+          case NULLL:
+            data = "null";
+          break;
+          default:
+          break;
+        }
+        fprintf(listing,"%-10s ",data);
         while (t != NULL) {
           fprintf(listing,"%3d; ",t->lineno);
           t = t->next;
