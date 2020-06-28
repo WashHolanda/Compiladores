@@ -54,7 +54,7 @@ static void insertNode( TreeNode * t) {
       case AssignK:
         if (st_lookup(t->attr.name, escopo) == -1){
           /* não encontrado na tabela, variavel não declarada */
-            fprintf(listing,"Erro Semantico: A variavel '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
+            //fprintf(listing,"Erro Semantico: A variavel '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
             Error = TRUE;
           }
         break;
@@ -120,7 +120,7 @@ static void insertNode( TreeNode * t) {
             Error = TRUE;
           }
           else {
-            st_insert(t->attr.name,t->lineno,0,escopo,VOIDTYPE, TIPO,CALL, t->vet);
+            st_insert(t->attr.name,t->lineno,location++,escopo,/*VOIDTYPE*/getFunType(t->attr.name), TIPO,CALL, t->vet);
           }
           break;
         default:
@@ -157,9 +157,9 @@ void checkNode(TreeNode * t){
       switch (t->kind.exp){
       case OpK:
         if((t->child[0] == NULL) || (t->child[1] == NULL)) break;
-        if (((t->child[0]->kind.exp == AtivK) &&( getFunStmt(t->child[0]->attr.name)) == VOIDTYPE) ||
-            ((t->child[1]->kind.exp == AtivK) && (getFunStmt(t->child[1]->attr.name) == VOIDTYPE)))
-              typeError(t,"Insersao de parametros a uma função do tipo VOID.");
+        if (((t->child[0]->kind.exp == AtivK) &&( getFunType(t->child[0]->attr.name)) == VOIDTYPE) ||
+            ((t->child[1]->kind.exp == AtivK) && (getFunType(t->child[1]->attr.name) == VOIDTYPE)))
+              typeError(t,"Uma funcao com retorno VOID não pode ser um operando.");
         break;
       case AtivK:
         if (((t->params > 0) && (getFunStmt(t->attr.name)) == VOIDTYPE))

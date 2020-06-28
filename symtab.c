@@ -52,23 +52,44 @@ static BucketList hashTable[SIZE];
 void st_insert( char * name, int lineno, int op, char* escopo, dataTypes RetType, dataTypes StmtType, IDTypes IType, int vet ){
   int h = hash(name);
   BucketList l =  hashTable[h];
+
   if(IType == CALL){
-    l = (BucketList) malloc(sizeof(struct BucketListRec));
-    l->name = name;
-    l->lines = (LineList) malloc(sizeof(struct LineListRec));
-    l->lines->lineno = lineno;
-    l->vet = vet;
-    l->memloc = op;
-    l->IType = IType;
-    l->RetType = RetType;
-    l->StmtType = StmtType;
-    l->escopo = escopo;
-    l->lines->next = NULL;
-    l->next = hashTable[h];
-    hashTable[h] = l;
+    // Procura a ultima declaração com o mesmo nome
+    while ((l != NULL)){
+      if(((strcmp(name,l->name) == 0))){
+        if(l->IType == CALL){
+          break;
+        }
+      }
+      l = l->next;
+    }
+    if(l == NULL){
+      l = (BucketList) malloc(sizeof(struct BucketListRec));
+      l->name = name;
+      l->lines = (LineList) malloc(sizeof(struct LineListRec));
+      l->lines->lineno = lineno;
+      l->vet = vet;
+      l->memloc = op;
+      l->IType = IType;
+      l->RetType = RetType;
+      l->StmtType = StmtType;
+      l->escopo = escopo;
+      l->lines->next = NULL;
+      l->next = hashTable[h];
+      hashTable[h] = l;
+      return;
+    }
+    else{
+      LineList t = l->lines;
+      while (t->next != NULL) t = t->next;
+      t->next = (LineList) malloc(sizeof(struct LineListRec));
+      t->next->lineno = lineno;
+      t->next->next = NULL;
+      return ;
+    }
   }
 
-  // Procura a ultima declaração com o mesmo nome
+// Procura a ultima declaração com o mesmo nome
   while ((l != NULL) && ((strcmp(name,l->name) != 0))){
     l = l->next;
   }
