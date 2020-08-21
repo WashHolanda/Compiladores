@@ -183,8 +183,8 @@ dataTypes getFunType(char* nome){
 
 void printSymTab(FILE * listing) {
   int i;
-  fprintf(listing,"Nome           Escopo  Tipo ID  Tipo Retorno  Tipo Param  Num da linha\n");
-  fprintf(listing,"-------------  ------  -------  ------------  ----------  ------------\n");
+  fprintf(listing,"Nome           Escopo  Tipo ID  Tipo Retorno  Tipo Param  Mem. Loc.  Num da linha\n");
+  fprintf(listing,"-------------  ------  -------  ------------  ----------  ---------  ------------\n");
   for (i=0;i<SIZE;++i) {
     if (hashTable[i] != NULL) {
       BucketList l = hashTable[i];
@@ -242,6 +242,7 @@ void printSymTab(FILE * listing) {
           break;
         }
         fprintf(listing,"%-10s ",data);
+        fprintf(listing,"    %-3d     ",l->memloc);
         while (t != NULL) {
           fprintf(listing,"%3d; ",t->lineno);
           t = t->next;

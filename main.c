@@ -16,6 +16,9 @@
 #if !NO_ANALYZE
 #include "analyze.h"
 #if !NO_CODE
+#include "cgen.h"
+#include "assembly.h"
+#include "code.h"
 #endif
 #endif
 #endif
