@@ -1,12 +1,3 @@
-/****************************************************/
-/* File: cgen.c                                     */
-/* The code generator implementation                */
-/* for the C- compiler                              */
-/* Adapted from:                                    */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #include "globals.h"
 #include "symtab.h"
 #include "code.h"
@@ -28,10 +19,11 @@ QuadList head = NULL;
 
 int location = 0;
 int mainLocation;
-
 int nlabel = 0;
 int ntemp = 0;
 int nparams = -1;
+int posMem;
+char escopoAtual[30] = "global";
 
 Address aux;
 Address var;
@@ -145,6 +137,7 @@ static void genStmt(TreeNode *tree){
   int loc1, loc2, loc3;
   char *label;
   char *temp;
+
   switch (tree->kind.stmt){
   case IfK:
     if (TraceCode)
@@ -165,9 +158,9 @@ static void genStmt(TreeNode *tree){
     quad_insert(opGOTO, empty, empty, empty); //jump else
     // end if
     label = newLabel();
-    quad_insert(opLAB,addr_createString(label, tree->scope), empty, empty);
+    quad_insert(opLAB,addr_createString(label, escopoAtual), empty, empty);
     // if false comes to here
-    quad_update(loc1, addr1,addr_createString(label, tree->scope), empty);
+    quad_update(loc1, addr1,addr_createString(label, escopoAtual), empty);
     // else
     cGen(p3);
     if (p3 != NULL){
@@ -177,10 +170,10 @@ static void genStmt(TreeNode *tree){
     }
     label = newLabel();
     // final
-    quad_insert(opLAB,addr_createString(label, tree->scope), empty, empty);
-    quad_update(loc2,addr_createString(label, tree->scope), empty, empty);
+    quad_insert(opLAB,addr_createString(label, escopoAtual), empty, empty);
+    quad_update(loc2,addr_createString(label, escopoAtual), empty, empty);
     if (p3 != NULL)
-      quad_update(loc3,addr_createString(label, tree->scope), empty, empty);
+      quad_update(loc3,addr_createString(label, escopoAtual), empty, empty);
     if (TraceCode)
       emitComment("<- if");
     break;
@@ -192,7 +185,7 @@ static void genStmt(TreeNode *tree){
     p2 = tree->child[1];//body
     // inicio do while
     label = newLabel();
-    quad_insert(opLAB,addr_createString(label, tree->scope), empty, empty); //you only know the label in the end of stmt
+    quad_insert(opLAB,addr_createString(label, escopoAtual), empty, empty); //you only know the label in the end of stmt
     // condicao while
     cGen(p1); //recursive
     addr1 = aux;
@@ -202,12 +195,12 @@ static void genStmt(TreeNode *tree){
     // while
     cGen(p2); //body
     loc3 = location;
-    quad_insert(opGOTO,addr_createString(label, tree->scope), empty, empty); //return to statement till the condition is false
+    quad_insert(opGOTO,addr_createString(label, escopoAtual), empty, empty); //return to statement till the condition is false
     // final
     label = newLabel();
-    quad_insert(opLAB,addr_createString(label, tree->scope), empty, empty); //here you know the label
+    quad_insert(opLAB,addr_createString(label, escopoAtual), empty, empty); //here you know the label
     //if condition is false comes to here
-    quad_update(loc1, addr1,addr_createString(label, tree->scope), empty);//update quad bc you r in the end 
+    quad_update(loc1, addr1,addr_createString(label, escopoAtual), empty);//update quad bc you r in the end 
     if (TraceCode)
       emitComment("<- while");
     break;
@@ -260,9 +253,9 @@ static void genExp(TreeNode *tree){
   char *label;
   char *temp;
   char *s = "";
-  printf("entrou no genExp \n");
-  printf("tree->scope %s \n", tree->scope);
-  printf("%d \n",tree->kind.exp);
+  //printf("entrou no genExp \n");
+  //printf("tree->scope %s \n", tree->scope);
+  //printf("%d \n",tree->kind.exp);
   //printf("tree->name %s\n",tree->attr.name);
   switch (tree->kind.exp){
   case ConstK:
@@ -271,7 +264,7 @@ static void genExp(TreeNode *tree){
       emitComment("-> Const");
     addr1 = addr_createIntConst(tree->attr.val);
     temp = newTemp();
-    aux =addr_createString(temp, tree->scope);
+    aux =addr_createString(temp, escopoAtual);
     quad_insert(opIMMED, aux, addr1, empty);
     if (TraceCode)
       emitComment("<- Const");
@@ -281,13 +274,13 @@ static void genExp(TreeNode *tree){
     //printf("IdK \n");
     if (TraceCode)
       emitComment("-> Id");
-    aux = addr_createString(tree->attr.name, tree->scope);
+    aux = addr_createString(tree->attr.name, escopoAtual);
     // printf("tree size: %d \n", tree->size);
     p1 = tree->child[0];
     if (p1 != NULL){
       //printf("entrou no vec \n");
       temp = newTemp();
-      addr1 =addr_createString(temp, tree->scope);
+      addr1 =addr_createString(temp, escopoAtual);
       addr2 = aux;
       cGen(p1);
       quad_insert(opVEC, addr1, addr2, aux);
@@ -298,7 +291,7 @@ static void genExp(TreeNode *tree){
     else{
       // printf("não entrou no vec \n");
       temp = newTemp();
-      addr1 =addr_createString(temp, tree->scope);
+      addr1 =addr_createString(temp, escopoAtual);
       quad_insert(opLOAD, addr1, aux, empty);
       var = aux;
       offset = empty;
@@ -314,22 +307,23 @@ static void genExp(TreeNode *tree){
     break;
 
   case FunDeclK:
+    strcpy(escopoAtual,tree->attr.name);
     //printf("FundeclK: %s \n",tree->attr.name);
     if (TraceCode)
       emitComment("-> Fun");
     // if main
     if (strcmp(tree->attr.name, "main") == 0)
       mainLocation = location;
-    if ((strcmp(tree->attr.name, "input") != 0) && (strcmp(tree->attr.name, "output") != 0))
-    {
-      quad_insert(opFUN, addr_createString(tree->attr.name, tree->scope), empty, empty);
+    if ((strcmp(tree->attr.name, "input") != 0) && (strcmp(tree->attr.name, "output") != 0)){
+      quad_insert(opFUN, addr_createString(tree->attr.name, escopoAtual), empty, empty);
       // params
-      p1 = tree->child[0];
+      p1 = tree->child[1];
       cGen(p1);
       // dec & expressions
-      p2 = tree->child[1];
+      p2 = tree->child[2];
       cGen(p2);
-      quad_insert(opEND, addr_createString(tree->attr.name, tree->scope), empty, empty);
+      quad_insert(opEND, addr_createString(tree->attr.name, escopoAtual), empty, empty);
+      strcpy(escopoAtual, "global");
     }
     if (TraceCode)
       emitComment("<- Fun");
@@ -343,8 +337,7 @@ static void genExp(TreeNode *tree){
     // é um parametro
     nparams = tree->params;
     p1 = tree->child[0];
-    while (p1 != NULL)
-    {
+    while (p1 != NULL){
       cGen(p1);
       quad_insert(opPARAM, aux, empty, empty);
       nparams--;
@@ -352,8 +345,8 @@ static void genExp(TreeNode *tree){
     }
     nparams = -1;
     temp = newTemp();
-    aux =addr_createString(temp, tree->scope);
-    quad_insert(opCALL, aux, addr_createString(tree->attr.name, tree->scope), addr_createIntConst(tree->params));
+    aux =addr_createString(temp, escopoAtual);
+    quad_insert(opCALL, aux, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(tree->params));
 
     if (TraceCode)
       emitComment("<- Call");
@@ -363,21 +356,22 @@ static void genExp(TreeNode *tree){
     //printf("ParamK \n");
     if (TraceCode)
       emitComment("-> Param");
-    quad_insert(opARG, addr_createString(tree->attr.name, tree->scope), empty, addr_createString(tree->scope,tree->scope));
+    quad_insert(opARG, addr_createString(tree->attr.name, escopoAtual), empty, addr_createString(escopoAtual,escopoAtual));
     if (TraceCode)
       emitComment("<- Param");
     break;
 
   case VarDeclK:
+    posMem = getMemLoc(tree->attr.name,escopoAtual);
     //printf("VardeclK \n");
     if (TraceCode)
       emitComment("-> Var");
-    if (tree->size != 0)
-    {
-      quad_insert(opALLOC, addr_createString(tree->attr.name, tree->scope), addr_createIntConst(tree->size), addr_createString(tree->scope,tree->scope));
+    if (posMem != -1){
+      quad_insert(opALLOC, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(posMem), addr_createString(escopoAtual,escopoAtual));
     }
     else
-      quad_insert(opALLOC, addr_createString(tree->attr.name, tree->scope), addr_createIntConst(1), addr_createString(tree->scope,tree->scope));
+      printf("ERRO VARIAVEL NÃO DECLARADA");
+      /*quad_insert(opALLOC, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(1), addr_createString(escopoAtual,escopoAtual));*/
     if (TraceCode)
       emitComment("<- Var");
     break;
@@ -393,9 +387,8 @@ static void genExp(TreeNode *tree){
     cGen(p2);
     addr2 = aux;
     temp = newTemp();
-    aux =addr_createString(temp, tree->scope);
-    switch (tree->attr.op)
-    {
+    aux =addr_createString(temp, escopoAtual);
+    switch (tree->attr.op){
     case SOM:
       // printf("plus \n");
       quad_insert(opADD, aux, addr1, addr2);
@@ -433,12 +426,12 @@ static void genExp(TreeNode *tree){
       quad_insert(opGREQUAL, aux, addr1, addr2);
       addr3 = aux;
       temp = newTemp();
-      aux =addr_createString(temp, tree->scope);
+      aux =addr_createString(temp, escopoAtual);
       quad_insert(opLEQUAL, aux, addr1, addr2);
       addr1 = addr3;
       addr2 = aux;
       temp = newTemp();
-      aux =addr_createString(temp, tree->scope);
+      aux =addr_createString(temp, escopoAtual);
       quad_insert(opAND, aux, addr1, addr2);
       break;
     case DIF:
@@ -446,12 +439,12 @@ static void genExp(TreeNode *tree){
       quad_insert(opGT, aux, addr1, addr2);
       addr3 = aux;
       temp = newTemp();
-      aux =addr_createString(temp, tree->scope);
+      aux =addr_createString(temp, escopoAtual);
       quad_insert(opLT, aux, addr1, addr2);
       addr1 = addr3;
       addr2 = aux;
       temp = newTemp();
-      aux =addr_createString(temp, tree->scope);
+      aux =addr_createString(temp, escopoAtual);
       quad_insert(opOR, aux, addr1, addr2);
       break;
     default:
@@ -485,11 +478,11 @@ static void cGen(TreeNode *tree){
     if (nparams == -1){
       cGen(tree->sibling);
     }
-    else{
+    /*else{
       if (nparams == 0){
         cGen(tree->sibling);
       }
-    }
+    }*/
   }
 }
 

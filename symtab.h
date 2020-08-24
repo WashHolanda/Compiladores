@@ -49,4 +49,7 @@ void printSymTab(FILE * listing);
 
 void busca_main ();
 dataTypes getFunType(char* nome);
+
+/* Função para conferir a posição de memoria alocada para uma variável */
+int getMemLoc(char* nome, char* escopo);
 #endif

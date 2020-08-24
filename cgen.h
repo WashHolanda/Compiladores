@@ -1,12 +1,3 @@
-/****************************************************/
-/* File: cgen.h                                     */
-/* The code generator interface                     */
-/* for the C- compiler                              */
-/* Adapted from:                                    */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #ifndef _CGEN_H_
 #define _CGEN_H_
 

@@ -65,20 +65,26 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes RetType
   }
 
   //Para inserir: não achou outra declaração, se achou verificar se o escopo é DIF e não é uma função
-  if ( l == NULL || (op != 0 && l->escopo != escopo && l->escopo != "global" && l->IType != FUN && l->IType != CALL)) { /* variável não está na tabela ainda */
-    l = (BucketList) malloc(sizeof(struct BucketListRec));
-    l->name = name;
-    l->lines = (LineList) malloc(sizeof(struct LineListRec));
-    l->lines->lineno = lineno;
-    l->vet = vet;
-    l->memloc = op;
-    l->IType = IType;
-    l->RetType = RetType;
-    l->StmtType = StmtType;
-    l->escopo = escopo;
-    l->lines->next = NULL;
-    l->next = hashTable[h];
-    hashTable[h] = l;
+  if ( l == NULL || (op != 0 && l->escopo != escopo && l->IType != FUN && l->IType != CALL)) { /* variável não está na tabela ainda */
+    if(l != NULL && strcmp(l->name,name) == 0 && strcmp(l->escopo,"global") == 0){
+      fprintf(listing,"[%d] Erro semântico! Variavel '%s' já declarada no escopo global.\n",lineno,name);
+      Error = TRUE;
+    }
+    else{
+      l = (BucketList) malloc(sizeof(struct BucketListRec));
+      l->name = name;
+      l->lines = (LineList) malloc(sizeof(struct LineListRec));
+      l->lines->lineno = lineno;
+      l->vet = vet;
+      l->memloc = op;
+      l->IType = IType;
+      l->RetType = RetType;
+      l->StmtType = StmtType;
+      l->escopo = escopo;
+      l->lines->next = NULL;
+      l->next = hashTable[h];
+      hashTable[h] = l;
+    }
   }
   else if( (l->IType == FUN  && IType == VAR) || (l->IType == CALL  && IType == VAR)){
     fprintf(listing,"Erro: Nome da variavel '%s' já utilizada como nome de função.[%d]\n",name, lineno);
@@ -88,11 +94,7 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes RetType
     fprintf(listing,"Erro: Variavel '%s' já declarada neste escopo.[%d]\n",name, lineno);
     Error = TRUE;
   }
-  else if(l->escopo != escopo && (strcmp(l->escopo,"global") != 0) ){
-    //procura por variavel global antes de supor que não existe
-    fprintf(listing,"Erro: Variavel '%s' já declarada no escopo global.[%d]\n",name, lineno);
-    Error = TRUE;
-  }else if(l->escopo != escopo){
+  else if(l->escopo != escopo){
     while ((l != NULL)){
       if((strcmp(l->escopo, "global")==0)&& ((strcmp( name,l->name) == 0))){
         LineList t = l->lines;
@@ -140,6 +142,19 @@ void busca_main () {
     fprintf(listing,"Erro: Função main não declarada\n");
     Error = TRUE;
   }
+}
+
+int getMemLoc(char* nome, char* escopo){
+  int h = hash(nome);
+  BucketList l =  hashTable[h];
+  while ((l != NULL)){
+    if (strcmp(nome,l->name) == 0){
+      if(strcmp(escopo,l->escopo) == 0) break;
+    }
+    l = l->next;
+  }
+  if (l == NULL) return -1;
+  else return l->memloc;
 }
 
 dataTypes getFunStmt(char* nome){

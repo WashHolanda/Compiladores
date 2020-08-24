@@ -1,17 +1,7 @@
-int teste(void){
-    int j;
-    j = j + teste();
-    return j;
-}
-
-void fun(int i){
-    i = i + 1;
-}
+int i;
 
 int main(void){
     int i;
-    i = i + teste();
-    i = teste();
-    fun(i);
+    i = 3+5;
     return 0;
 }

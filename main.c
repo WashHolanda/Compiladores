@@ -93,7 +93,7 @@ int main( int argc, char * argv[] ) {
       exit(1);
     }
     fprintf(listing,"Creating Intermediate Code...\n");
-    codeGen(syntaxTree,codefile);                             //GERADOR DE COD. INTERMED.
+    codeGen(syntaxTree,codefile);//GERADOR DE COD. INTERMED.
     fprintf(listing,"Indermediate Code Created\n");
     fclose(code);
    } 
