@@ -198,6 +198,8 @@ dataTypes getFunType(char* nome){
 
 void printSymTab(FILE * listing) {
   int i;
+  
+  printf("\nTabela de Simbolos:\n");
   fprintf(listing,"Nome           Escopo  Tipo ID  Tipo Retorno  Tipo Param  Mem. Loc.  Num da linha\n");
   fprintf(listing,"-------------  ------  -------  ------------  ----------  ---------  ------------\n");
   for (i=0;i<SIZE;++i) {

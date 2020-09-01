@@ -76,12 +76,6 @@ typedef struct treeNode {
 /***********   Flags for tracing       ************/
 /**************************************************/
 
-/* EchoSource = TRUE causes the source program to
- * be echoed to the listing file with line numbers
- * during parsing
- */
-extern int EchoSource;
-
 /* TraceScan = TRUE faz com que as informações do token sejam impressas no arquivo de listagem,
 pois cada token é reconhecido pelo scanner */
 extern int TraceScan;

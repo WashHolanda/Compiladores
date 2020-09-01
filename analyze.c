@@ -12,8 +12,10 @@ void UpdateScope(TreeNode * t){
   if (t != NULL && t->kind.exp == FunDeclK){
     escopo = t->attr.name;
     if(getFunType(escopo) == INTTYPE && check_return == TRUE){
-      if(checkReturn(escopo) == -1)
+      if(checkReturn(escopo) == -1){
         printf("Erro Semantico: Retorno da funcao '%s' inexistente. [%d]\n",escopo,t->lineno);
+        Error = TRUE;
+      }
     }
   }
 }
@@ -51,21 +53,18 @@ static void insertNode( TreeNode * t) {
   switch (t->nodekind){
     case StmtK:
       switch (t->kind.stmt){
-      case AssignK:
-        if (st_lookup(t->attr.name, escopo) == -1){
-          /* não encontrado na tabela, variavel não declarada */
-            //fprintf(listing,"Erro Semantico: A variavel '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
-            Error = TRUE;
-          }
-        break;
       case ReturnVOID:
-        if(getFunType(escopo) == INTTYPE)
+        if(getFunType(escopo) == INTTYPE){
           printf("Erro Semantico: Retorno da função '%s' incompatível. [%d]\n",escopo,t->lineno);
+          Error = TRUE;
+        }
         st_insert("return",t->lineno,location++,escopo,INTTYPE, NULLL, RETT, t->vet); 
         break;
       case ReturnINT:
-        if(getFunType(escopo) == VOIDTYPE)
+        if(getFunType(escopo) == VOIDTYPE){
           printf("Erro Semantico: Retorno da função '%s' incompatível. [%d]",escopo,t->lineno);
+          Error = TRUE;
+        }
         st_insert("return",t->lineno,location++,escopo,INTTYPE, NULLL, RETT, t->vet); 
         break;
       default:
@@ -86,9 +85,11 @@ static void insertNode( TreeNode * t) {
           if (st_lookup(t->attr.name,escopo) == -1){
             /* não encontrado na tabela, inserir*/
             st_insert(t->attr.name,t->lineno,location++, "global",t->type, TIPO,FUN, t->vet);}
-          else
+          else{
           /* encontrado na tabela, erro semântico */
             fprintf(listing,"Erro Semantico: Multiplas declarações da função '%s'. [%d]\n", t->attr.name, t->lineno);
+            Error = TRUE;
+            }
           break;
         case ParamK:
               st_insert(t->attr.name,t->lineno,location++,escopo,INTTYPE, TIPO, VAR, t->vet);
@@ -138,9 +139,9 @@ static void insertNode( TreeNode * t) {
 void buildSymtab(TreeNode * syntaxTree){
   traverse(syntaxTree,insertNode,nullProc);
   busca_main();
-  printf("\nTabela de Simbolos:\n");
-  printSymTab(listing);
-  
+  check_return = TRUE;
+  typeCheck(syntaxTree);
+  if(TraceAnalyze) printSymTab(listing);
 }
 
 static void typeError(TreeNode * t, char * message){
@@ -190,5 +191,4 @@ void checkNode(TreeNode * t){
  */
 void typeCheck(TreeNode * syntaxTree){
   traverse(syntaxTree,checkNode, nullProc);
-
 }

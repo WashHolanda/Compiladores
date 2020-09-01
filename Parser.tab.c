@@ -477,7 +477,7 @@ static const yytype_uint16 yyrline[] =
      194,   195,   196,   199,   199,   202,   210,   222,   233,   237,
      240,   248,   251,   255,   263,   269,   272,   276,   280,   284,
      288,   292,   299,   305,   308,   312,   319,   325,   328,   332,
-     339,   340,   341,   342,   345,   352,   361,   371
+     339,   340,   341,   342,   347,   354,   363,   373
 };
 #endif
 
@@ -1915,12 +1915,14 @@ yyreduce:
 
   case 63:
 #line 342 "Parser.y" /* yacc.c:1646  */
-    { (yyval) = (yyvsp[0]); }
-#line 1920 "Parser.tab.c" /* yacc.c:1646  */
+    { (yyval) = newExpNode(ConstK);
+            (yyval)->type = INTTYPE;
+            (yyval)->attr.val = atoi(tokenString); }
+#line 1922 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 345 "Parser.y" /* yacc.c:1646  */
+#line 347 "Parser.y" /* yacc.c:1646  */
     {
           (yyval) = newExpNode(AtivK);
           (yyval)->kind.exp = AtivK;
@@ -1929,11 +1931,11 @@ yyreduce:
           (yyval)->params = params;
           (yyval)->lineno = lineno;
        }
-#line 1933 "Parser.tab.c" /* yacc.c:1646  */
+#line 1935 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 352 "Parser.y" /* yacc.c:1646  */
+#line 354 "Parser.y" /* yacc.c:1646  */
     {
            (yyval) = newExpNode(AtivK);
            (yyval)->kind.exp = AtivK;
@@ -1941,11 +1943,11 @@ yyreduce:
            (yyval)->params = params;
            (yyval)->lineno = lineno;
          }
-#line 1945 "Parser.tab.c" /* yacc.c:1646  */
+#line 1947 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 361 "Parser.y" /* yacc.c:1646  */
+#line 363 "Parser.y" /* yacc.c:1646  */
     {
               YYSTYPE t = (yyvsp[-2]);
               if (t != NULL){
@@ -1957,19 +1959,19 @@ yyreduce:
               }
               else (yyval) = (yyvsp[0]);
    }
-#line 1961 "Parser.tab.c" /* yacc.c:1646  */
+#line 1963 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 371 "Parser.y" /* yacc.c:1646  */
+#line 373 "Parser.y" /* yacc.c:1646  */
     { 
            params ++;
            (yyval) = (yyvsp[0]); }
-#line 1969 "Parser.tab.c" /* yacc.c:1646  */
+#line 1971 "Parser.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1973 "Parser.tab.c" /* yacc.c:1646  */
+#line 1975 "Parser.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2197,7 +2199,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 376 "Parser.y" /* yacc.c:1906  */
+#line 378 "Parser.y" /* yacc.c:1906  */
 
 
 int yyerror(char *message){
