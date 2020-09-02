@@ -56,7 +56,6 @@ typedef struct treeNode {
      int lineno;
      int size;
      int add;
-     int already_seem;
      NodeKind nodekind;
      union { StmtKind stmt; ExpKind exp;} kind;
      union { TokenType op;

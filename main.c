@@ -13,17 +13,16 @@ FILE * source;
 FILE * listing;
 FILE * code;
 
-/* allocate and set tracing flags */
-int TraceScan = FALSE; // Imprime tokens do scanner
-int TraceParse = FALSE; // Imprime árvore sintática
-int TraceAnalyze = TRUE; //Imprime tabela de símbolos
-int TraceCode = TRUE; 
+int TraceScan = FALSE; // Se TRUE, imprime tokens do scanner
+int TraceParse = FALSE; // Se TRUE, imprime árvore sintática
+int TraceAnalyze = FALSE; // Se TRUE, imprime tabela de símbolos
+int TraceCode = FALSE; // Se TRUE, imprime como está sendo feito o Código Intermediário
 int Error = FALSE;
 
 int main( int argc, char * argv[] ) {
   TreeNode * syntaxTree;
-  char pgm[120]; /* nome do arquivo do código fonte */
-  char path[120];
+  char pgm[120]; // nome do arquivo do código fonte 
+  char path[120]; // nome do diretório do código fonte
   if (argc != 2) {
     fprintf(stderr,"Arquivo não especificado.\n Uso: %s <nome do arquivo>\n",argv[0]);
     exit(1);
@@ -48,13 +47,13 @@ int main( int argc, char * argv[] ) {
     fprintf(listing,"\nÁrvore Sintática:\n");
     printTree(syntaxTree);
   }
-    buildSymtab(syntaxTree);
-   if (TraceAnalyze){
+  buildSymtab(syntaxTree);
+  if (TraceAnalyze){
      fprintf(listing,"Compilação Concluida!\n"); 
-   } 
+  } 
 
-   if (!Error){
-   char * codefile;
+  if (!Error){
+    char * codefile;
     int fnlen = strcspn(pgm,".");
     codefile = (char *) calloc(12+fnlen+4, sizeof(char));
     strcpy(codefile,"binarios/");
@@ -69,7 +68,7 @@ int main( int argc, char * argv[] ) {
     codeGen(syntaxTree,codefile);//GERADOR DE COD. INTERMED.
     fprintf(listing,"Indermediate Code Created\n");
     fclose(code);
-    } 
+  } 
   fclose(source);
   return 0;
 }

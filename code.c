@@ -1,12 +1,3 @@
-/****************************************************/
-/* File: code.c                                     */
-/* C- Code emitting utilities                       */
-/* implementation for the C- compiler               */
-/* Adapted from:                                    */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #include "globals.h"
 #include "code.h"
 
