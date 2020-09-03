@@ -4,7 +4,7 @@
 #include "cgen.h"
 #include "parse.h"
 #include "analyze.h"
-#include "assembly.h"
+//#include "assembly.h"
 
 /* tmpOffset is the memory offset for temps
    It is decremented each time a temp is
@@ -83,7 +83,7 @@ char *newLabel(){
 char *newTemp(){
   char *temp = (char *)malloc((ntemp_size + 3) * sizeof(char));
   sprintf(temp, "$t%d", ntemp);
-  ntemp = (ntemp + 1) % nregtemp; //NÚMERO DE REGISTRADORES TEMPORÁRIOS = nregtemp
+  ntemp = (ntemp + 1) % 25;//nregtemp; //NÚMERO DE REGISTRADORES TEMPORÁRIOS = nregtemp
   return temp;
 }
 

@@ -1,12 +1,3 @@
-/****************************************************/
-/* File: code.h                                     */
-/* C- Code emitting utilities                       */
-/* interface for the C- compiler                    */
-/* Adapted from:                                    */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #ifndef _CODE_H_
 #define _CODE_H_
 

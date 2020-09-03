@@ -4,7 +4,7 @@
 #include "parse.h"
 #include "analyze.h"
 #include "cgen.h"
-#include "assembly.h"
+//#include "assembly.h"
 #include "code.h"
 
 extern int check_return;
