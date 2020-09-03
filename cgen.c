@@ -31,8 +31,8 @@ Address var;
 Address offset;
 Address empty;
 
-const char *OpKindNames[] = {"add", "sub", "mult", "div", "bgeq", "bgt", "bleq", "blt", "bne","beq", "and", "or", "atrib", "alloc", "immed", "load", "store",
-                             "vec", "goto", "iff", "ret", "fun", "end", "param", "call", "arg", "lab", "hlt"};
+const char *OpKindNames[] = {"add", "sub", "mult", "div", "bgeq", "bgt", "bleq", "blt", "bne","beq", "atrib", "alloc", "immed", "load", "store",
+                             "vec", "goto", "ret", "fun", "end", "param", "call", "arg", "lab", "hlt"};
 
 void quad_insert(OpKind op, Address addr1, Address addr2, Address addr3){
   Quad quad;

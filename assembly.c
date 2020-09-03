@@ -283,16 +283,16 @@ void generateInstruction (QuadList l) {
                 instructionFormat1(sge, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
                 break;
     
-            case opAND:
+            /*case opAND:
                 //printf("entrou no and \n");
                 instructionFormat1(and, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
                 break;
-    
+                
             case opOR:
                 // printf("entrou no or \n");
                 instructionFormat1(or, getReg(a1.contents.var.name), getReg(a2.contents.var.name), getReg(a3.contents.var.name));
                 break;
-            
+            */
             case opASSIGN:
                 //printf("entrou no op assign \n");
                 instructionFormat2(move, getReg(a1.contents.var.name), getReg(a2.contents.var.name), 0, NULL);
@@ -382,11 +382,11 @@ void generateInstruction (QuadList l) {
                 instructionFormat4(jmp, -1, a1.contents.var.name);
                 break;
             
-            case opIFF:
+            /*case opIFF:
               //  printf("entrou no iffalse \n");
                 instructionFormat2(beq, getReg(a1.contents.var.name), $zero, -1, a2.contents.var.name);
                 break;
-            
+            */
             case opRET:
               //  printf("entrou no return \n");
                 if (a1.kind == String) instructionFormat2(move, $ret, getReg(a1.contents.var.name), 0, NULL);

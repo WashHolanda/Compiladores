@@ -18,7 +18,7 @@ int main(void){
     a = 38;
     j = 14;
 
-    if(a < j){
+    if(a > 20){
         a = teste(a, 12);
     }
     else{
