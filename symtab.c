@@ -111,8 +111,7 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes RetType
       Error = TRUE;
     }
   }
-  else if(op == 0)
-  {
+  else if(op == 0){
     LineList t = l->lines;
     while (t->next != NULL) t = t->next;
     t->next = (LineList) malloc(sizeof(struct LineListRec));
@@ -125,11 +124,12 @@ int st_lookup ( char * name, char * escopo){
   int h = hash(name);
   BucketList l =  hashTable[h];
   while ((l != NULL) && (strcmp(name,l->name) != 0) && (strcmp(escopo,l->escopo) != 0)){
-    l = l->next;}
+    l = l->next;
+  }
   if (l == NULL) return -1;
   else {
     return 0;
-    }
+  }
 }
 
 /*Função que confere se a main() foi declarada */
@@ -259,7 +259,8 @@ void printSymTab(FILE * listing) {
           break;
         }
         fprintf(listing,"%-10s ",data);
-        fprintf(listing,"    %-3d     ",l->memloc);
+        if(l->memloc != -1) fprintf(listing,"    %-3d     ",l->memloc);
+        else fprintf(listing,"   NULL     ");
         while (t != NULL) {
           fprintf(listing,"%3d; ",t->lineno);
           t = t->next;

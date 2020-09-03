@@ -1,10 +1,28 @@
+int soma (int a, int b, int c){
+    int total[5];
+
+    total[0] = a + b;
+    return total[0];
+}
+
+int teste (int a, int b){
+    int total;
+
+    total = a + b;
+    return total;
+}
+
 int main(void){
     int j;
     int a;
-    a = 2;
+    a = 38;
+    j = 14;
 
-    while(a != 4){
-        a = a+1;
+    if(a < j){
+        a = teste(a, 12);
+    }
+    else{
+        a = soma(a, 16,2);
     }
 
     return 0;

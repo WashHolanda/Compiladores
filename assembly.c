@@ -1,12 +1,3 @@
-/****************************************************/
-/* File: assembly.c                                 */
-/* Global types and vars for C- compiler            */
-/* must come before other include files             */
-/* Adapted from:                                    */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #include "globals.h"
 #include "symtab.h"
 #include "code.h"

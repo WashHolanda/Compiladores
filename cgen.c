@@ -264,11 +264,13 @@ static void genExp(TreeNode *tree){
       aux = addr1;
     }
     else{
+      posMem = getMemLoc(tree->attr.name,escopoAtual);
       temp = newTemp();
       addr1 =addr_createString(temp, escopoAtual);
-      quad_insert(opLOAD, addr1, aux, empty);
+      addr3 =addr_createIntConst(posMem);
+      quad_insert(opLOAD, addr1, aux, addr3);
       var = aux;
-      offset = empty;
+      offset = addr_createIntConst(posMem);;
       aux = addr1;
     }
     if (TraceCode)
@@ -277,13 +279,14 @@ static void genExp(TreeNode *tree){
 
   case FunDeclK:
     strcpy(escopoAtual,tree->attr.name);
+    posMem = getMemLoc(tree->attr.name,"global");
     if (TraceCode)
       emitComment("-> Fun");
     // if main
     if (strcmp(tree->attr.name, "main") == 0)
       mainLocation = location;
     if ((strcmp(tree->attr.name, "input") != 0) && (strcmp(tree->attr.name, "output") != 0)){
-      quad_insert(opFUN, addr_createString(tree->attr.name, escopoAtual), empty, empty);
+      quad_insert(opFUN, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(posMem), empty);
       // params
       p1 = tree->child[1];
       cGen(p1);
@@ -320,9 +323,10 @@ static void genExp(TreeNode *tree){
     break;
 
   case ParamK:
+    posMem = getMemLoc(tree->attr.name,escopoAtual);
     if (TraceCode)
       emitComment("-> Param");
-    quad_insert(opARG, addr_createString(tree->attr.name, escopoAtual), empty, addr_createString(escopoAtual,escopoAtual));
+    quad_insert(opARG, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(posMem), addr_createString(escopoAtual,escopoAtual));
     if (TraceCode)
       emitComment("<- Param");
     break;

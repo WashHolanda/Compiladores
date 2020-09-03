@@ -58,14 +58,14 @@ static void insertNode( TreeNode * t) {
           printf("Erro Semantico: Retorno da função '%s' incompatível. [%d]\n",escopo,t->lineno);
           Error = TRUE;
         }
-        st_insert("return",t->lineno,location++,escopo,INTTYPE, NULLL, RETT, t->vet); 
+        st_insert("return",t->lineno,-1,escopo,INTTYPE, NULLL, RETT, t->vet); 
         break;
       case ReturnINT:
         if(getFunType(escopo) == VOIDTYPE){
           printf("Erro Semantico: Retorno da função '%s' incompatível. [%d]",escopo,t->lineno);
           Error = TRUE;
         }
-        st_insert("return",t->lineno,location++,escopo,INTTYPE, NULLL, RETT, t->vet); 
+        st_insert("return",t->lineno,-1,escopo,INTTYPE, NULLL, RETT, t->vet); 
         break;
       default:
         break;
@@ -114,14 +114,16 @@ static void insertNode( TreeNode * t) {
           }
           break;
         case AtivK:
-          //st_insert(t->attr.name,t->lineno,location++,escopo,NULLL,CALL, t->vet);/*se eu coloco 0 dá certo sem o erro do xyz não declarado*/
           if (st_lookup(t->attr.name, escopo) == -1 && strcmp(t->attr.name, "input")!=0 && strcmp(t->attr.name, "output")!=0){
             fprintf(listing,"Erro Semântico: A função '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
-            //st_insert(t->attr.name,t->lineno,0,escopo,NULLL,CALL, t->vet);
             Error = TRUE;
           }
           else {
-            st_insert(t->attr.name,t->lineno,location++,escopo,/*VOIDTYPE*/getFunType(t->attr.name), TIPO,CALL, t->vet);
+            /*if(st_lookup(t->attr.name, escopo) == 0 && aqui ver se o número de param é igual)*/
+            st_insert(t->attr.name,t->lineno,location++,escopo,getFunType(t->attr.name), TIPO,CALL, t->vet);
+            /*else{
+              fprintf(listing,"Erro Semântico: A chamada '%s' tem parâmetros imcompatíveis. [%d]\n", t->attr.name, t->lineno);
+            }*/
           }
           break;
         default:
