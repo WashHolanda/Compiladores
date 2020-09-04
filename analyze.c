@@ -58,14 +58,14 @@ static void insertNode( TreeNode * t) {
           printf("Erro Semantico: Retorno da função '%s' incompatível. [%d]\n",escopo,t->lineno);
           Error = TRUE;
         }
-        st_insert("return",t->lineno,-1,escopo,INTTYPE, NULLL, RETT, t->vet); 
+        st_insert("return",t->lineno,0,escopo,INTTYPE, NULLL, RETT, t->vet); 
         break;
       case ReturnINT:
         if(getFunType(escopo) == VOIDTYPE){
           printf("Erro Semantico: Retorno da função '%s' incompatível. [%d]",escopo,t->lineno);
           Error = TRUE;
         }
-        st_insert("return",t->lineno,-1,escopo,INTTYPE, NULLL, RETT, t->vet); 
+        st_insert("return",t->lineno,0,escopo,INTTYPE, NULLL, RETT, t->vet); 
         break;
       default:
         break;
