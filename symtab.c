@@ -65,7 +65,7 @@ void st_insert( char * name, int lineno, int op, char* escopo, dataTypes RetType
   }
 
   //Para inserir: não achou outra declaração, se achou verificar se o escopo é DIF e não é uma função
-  if ( l == NULL || (op != 0 && l->escopo != escopo && l->IType != FUN && l->IType != CALL)) { /* variável não está na tabela ainda */
+  if ( l == NULL || (op != 0 && l->escopo != escopo && l->IType != FUN && l->IType != CALL) || IType == RETT) { /* variável não está na tabela ainda */
     if(l != NULL && strcmp(l->name,name) == 0 && strcmp(l->escopo,"global") == 0){
       fprintf(listing,"[%d] Erro semântico! Variavel '%s' já declarada no escopo global.\n",lineno,name);
       Error = TRUE;
@@ -261,7 +261,7 @@ void printSymTab(FILE * listing) {
         }
         fprintf(listing,"%-10s ",data);
         if(l->memloc != -1) fprintf(listing,"    %-3d     ",l->memloc);
-        else fprintf(listing,"   NULL     ");
+        else fprintf(listing,"    -       ");
         while (t != NULL) {
           fprintf(listing,"%3d; ",t->lineno);
           t = t->next;
@@ -272,3 +272,17 @@ void printSymTab(FILE * listing) {
     }
   }
 } /* printSymTab */
+
+IDTypes getVarType(char* nome, char* escopo){
+  int h = hash(nome);
+  BucketList l =  hashTable[h];
+  if(nome == NULL) return -1;
+  while ((l != NULL)){
+    if (strcmp(nome,l->name) == 0){
+      if(strcmp(escopo,l->escopo) == 0) break;
+    }
+    l = l->next;
+  }
+  if (l == NULL) return -1;
+  else return l->IType;
+}

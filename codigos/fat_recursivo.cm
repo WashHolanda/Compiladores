@@ -1,0 +1,24 @@
+int fatorial(int n){
+    int vfat;
+    int x;
+    int y;
+    int z[4];
+  
+  if ( n <= 1 )
+    return (1);
+  else{
+    vfat = n * fatorial(n - 1);
+    return (vfat);
+  }
+}
+
+int main(void){
+  int numero;
+  int f;
+  
+  numero = 5;
+  
+  f = fatorial(numero);
+  
+  return 0;
+}

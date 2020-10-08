@@ -39,7 +39,6 @@ void main(void){
 	while (i < 10){
 		vet[i] = input();
 		i = i + 1;
-		
 	}
 	sort(vet,0,10);
 	i = 0;

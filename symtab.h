@@ -52,4 +52,6 @@ dataTypes getFunType(char* nome);
 
 /* Função para conferir a posição de memoria alocada para uma variável */
 int getMemLoc(char* nome, char* escopo);
+
+IDTypes getVarType(char* nome, char* escopo);
 #endif

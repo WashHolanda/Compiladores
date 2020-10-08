@@ -80,6 +80,7 @@ static void insertNode( TreeNode * t) {
             st_insert(t->attr.name,t->lineno,location++, escopo,INTTYPE, TIPO, VAR , t->vet);
           break;
         case FunDeclK:
+          location = 0;
           if(strcmp(t->child[1]->attr.name,"VOID") == 0) TIPO = VOIDTYPE;
           else TIPO = INTTYPE;
           if (st_lookup(t->attr.name,escopo) == -1){
@@ -91,16 +92,15 @@ static void insertNode( TreeNode * t) {
             Error = TRUE;
             }
           break;
-        case ParamK:
+        case VarParamK:
               st_insert(t->attr.name,t->lineno,location++,escopo,INTTYPE, TIPO, VAR, t->vet);
           break;
+        case VetParamK:
+              st_insert(t->attr.name,t->lineno,location++,escopo,INTTYPE, TIPO, VET, t->vet);
+          break;
         case VetorK:
-           if (st_lookup(t->attr.name, escopo) == -1)
-          /* não encontrado na tabela, inserir*/
-            st_insert(t->attr.name,t->lineno,location++, escopo,INTTYPE, TIPO, VAR , t->vet);
-          else
-          /* encontrado na tabela, verificar escopo */
-            st_insert(t->attr.name,t->lineno,0, escopo,INTTYPE, TIPO, VAR, t->vet);
+          st_insert(t->attr.name,t->lineno,location++, escopo,INTTYPE, TIPO, VET, t->vet);
+          location += t->child[1]->attr.val - 1;
           break;
         case IdK:
           if(t->add != 1){

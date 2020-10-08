@@ -1,8 +1,12 @@
+int x;
+int vet[5];
+
 int soma (int a, int b, int c){
     int total[5];
+    int jota;
 
-    total[0] = a + b;
-    return total[0];
+    vet[3] = total[2] + x;
+    return total;
 }
 
 int teste (int a, int b){
@@ -22,7 +26,7 @@ int main(void){
         a = teste(a, 12);
     }
     else{
-        a = soma(a, 16,2);
+        a = soma(a, j+16,2);
     }
 
     return 0;

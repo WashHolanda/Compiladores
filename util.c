@@ -146,9 +146,12 @@ static void printSpaces(void)
          case TypeK:
            fprintf(listing,"Tipo: %s\n",tree->attr.name);
            break;
-          case ParamK:
+          case VarParamK:
            fprintf(listing,"Parametro: %s\n",tree->attr.name);
            break; 
+          case VetParamK:
+           fprintf(listing,"Parametro: %s\n",tree->attr.name);
+           break;
           case VetorK:
           fprintf(listing, "Vetor: %s", tree->attr.name);
 	        break;

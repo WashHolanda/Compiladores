@@ -5,7 +5,7 @@
 #include "analyze.h"
 #include "cgen.h"
 //#include "assembly.h"
-#include "code.h"
+//#include "binary.h"
 
 extern int check_return;
 int lineno = 1;
@@ -15,7 +15,7 @@ FILE * code;
 
 int TraceScan = FALSE; // Se TRUE, imprime tokens do scanner
 int TraceParse = FALSE; // Se TRUE, imprime árvore sintática
-int TraceAnalyze = FALSE; // Se TRUE, imprime tabela de símbolos
+int TraceAnalyze = TRUE; // Se TRUE, imprime tabela de símbolos
 int TraceCode = FALSE; // Se TRUE, imprime como está sendo feito o Código Intermediário
 int Error = FALSE;
 
@@ -64,9 +64,15 @@ int main( int argc, char * argv[] ) {
       printf("Unable to open %s\n",codefile);
       exit(1);
     }
-    fprintf(listing,"Creating Intermediate Code...\n");
+    fprintf(listing,"Criando Código Intermediário...\n");
     codeGen(syntaxTree,codefile);//GERADOR DE COD. INTERMED.
-    fprintf(listing,"Indermediate Code Created\n");
+    fprintf(listing,"Código Intermediário Criado!\n");
+    fprintf(listing,"\nGerando Código Assembly...\n");
+    generateAssembly(getIntermediate());
+    fprintf(listing,"\nCódigo Assembly Gerado!\n");
+    /*fprintf(listing,"\nGerando Código Binário...\n");
+    generateBinary(getAssembly(), getSize());
+    fprintf(listing,"\nCódigo Binário Gerado!\n");*/
     fclose(code);
   } 
   fclose(source);

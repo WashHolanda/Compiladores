@@ -1,10 +1,9 @@
 #include "globals.h"
 #include "symtab.h"
-#include "code.h"
 #include "cgen.h"
 #include "parse.h"
 #include "analyze.h"
-//#include "assembly.h"
+#include "assembly.h"
 
 /* tmpOffset is the memory offset for temps
    It is decremented each time a temp is
@@ -20,7 +19,7 @@ QuadList head = NULL;
 int location = 0;
 int mainLocation;
 int nlabel = 0;
-int ntemp = 0;
+int ntemp = 1;
 int nparams = -1;
 int posMem;
 char escopoAtual[30] = "global";
@@ -33,6 +32,12 @@ Address empty;
 
 const char *OpKindNames[] = {"add", "sub", "mult", "div", "bgeq", "bgt", "bleq", "blt", "bne","beq", "atrib", "alloc", "immed", "load", "store",
                              "vec", "goto", "ret", "fun", "end", "param", "call", "arg", "lab", "hlt"};
+
+// Procedure emitComment prints a comment line with comment c in the code file
+void emitComment( char * c ) { 
+  if (TraceCode) fprintf(code,"// %s\n",c);
+  printf("%s\n", c);
+}
 
 void quad_insert(OpKind op, Address addr1, Address addr2, Address addr3){
   Quad quad;
@@ -83,7 +88,7 @@ char *newLabel(){
 char *newTemp(){
   char *temp = (char *)malloc((ntemp_size + 3) * sizeof(char));
   sprintf(temp, "$t%d", ntemp);
-  ntemp = (ntemp + 1) % 25;//nregtemp; //NÚMERO DE REGISTRADORES TEMPORÁRIOS = nregtemp
+  ntemp = (ntemp % nregtemp)+1; //NÚMERO DE REGISTRADORES TEMPORÁRIOS = nregtemp
   return temp;
 }
 
@@ -150,7 +155,6 @@ static void genStmt(TreeNode *tree){
     if (p3 != NULL){
       // goes to the end
       loc3 = location;
-      quad_insert(opGOTO, empty, empty, empty); //sair else
     }
     label = newLabel();
     // final
@@ -303,26 +307,41 @@ static void genExp(TreeNode *tree){
   case AtivK:
     if (TraceCode)
       emitComment("-> Call");
-    //Address a1 = addr_createIntConst(tree->params);
-    // é um parametro
     nparams = tree->params;
     p1 = tree->child[0];
     while (p1 != NULL){
-      cGen(p1);
+      if(p1->kind.exp == IdK){
+        if(getVarType(p1->attr.name,escopoAtual) == VET){
+          temp = newTemp();
+          aux = addr_createString(temp,escopoAtual);
+          quad_insert(opIMMED,aux,addr_createIntConst(getMemLoc(p1->attr.name,escopoAtual)),empty);
+        
+        }else cGen(p1);
+      }else{
+        cGen(p1);
+      }
       quad_insert(opPARAM, aux, empty, empty);
       nparams--;
       p1 = p1->sibling;
     }
     nparams = -1;
-    temp = newTemp();
-    aux =addr_createString(temp, escopoAtual);
+    aux =addr_createString("$ret", escopoAtual);
     quad_insert(opCALL, aux, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(tree->params));
 
     if (TraceCode)
       emitComment("<- Call");
     break;
 
-  case ParamK:
+  case VarParamK:
+    posMem = getMemLoc(tree->attr.name,escopoAtual);
+    if (TraceCode)
+      emitComment("-> Param");
+    quad_insert(opARG, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(posMem), addr_createString(escopoAtual,escopoAtual));
+    if (TraceCode)
+      emitComment("<- Param");
+    break;
+
+  case VetParamK:
     posMem = getMemLoc(tree->attr.name,escopoAtual);
     if (TraceCode)
       emitComment("-> Param");
@@ -336,7 +355,7 @@ static void genExp(TreeNode *tree){
     if (TraceCode)
       emitComment("-> Var");
     if (posMem != -1){
-      quad_insert(opALLOC, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(posMem), addr_createString(escopoAtual,escopoAtual));
+      quad_insert(opALLOC, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(1), addr_createString(escopoAtual,escopoAtual));
     }
     else{
       Error = TRUE;
@@ -344,6 +363,21 @@ static void genExp(TreeNode *tree){
     }
     if (TraceCode)
       emitComment("<- Var");
+    break;
+
+  case VetorK:
+    posMem = getMemLoc(tree->attr.name,escopoAtual);
+    if (TraceCode)
+      emitComment("-> Vet");
+    if (posMem != -1){
+      quad_insert(opALLOC, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(tree->child[1]->attr.val), addr_createString(escopoAtual,escopoAtual));
+    }
+    else{
+      Error = TRUE;
+      return;
+    }
+    if (TraceCode)
+      emitComment("<- Vet");
     break;
 
   case OpK:
@@ -420,9 +454,11 @@ static void cGen(TreeNode *tree){
   if (tree != NULL){
     switch (tree->nodekind){
     case StmtK:
+      if(TraceCode) printf("-> Stmt %d\n",tree->lineno);
       genStmt(tree);
       break;
     case ExpK:
+      if(TraceCode) printf("-> Exp %d\n",tree->lineno);
       genExp(tree);
       break;
     default:

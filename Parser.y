@@ -65,17 +65,25 @@ var-dec:  tipo ID PEV {
             $$->kind.exp = VarDeclK;
             $$->lineno = lineno;
           }
-    | tipo fun-id ACO NUM FCO PEV {
+    | tipo fun-id ACO tam FCO PEV {
             $$ = newExpNode(VetorK);
             $$->attr.name = copyString(id);
             $$->child[0] = $1;
+            $$->child[1] = $4;
             $$->type = $1->type;
             $$->scope= scope;
-            $$->kind.exp = VarDeclK;
+            $$->kind.exp = VetorK;
             $$->lineno = lineno;
           }
     | error {yyerror("");}
 ;
+
+tam: NUM  {
+            $$ = newExpNode(ConstK);
+            $$->type = INTTYPE;
+            $$->attr.name = NULL;
+            $$->attr.val = atoi(tokenString);
+}
 
 tipo: INT {
             $$ = newExpNode(TypeK);
@@ -129,18 +137,18 @@ lista-parametros: lista-parametros VIRG lista-parametros {
 ;
 
 tipo-parametro: tipo ID {
-          $$ = newExpNode(ParamK);
+          $$ = newExpNode(VarParamK);
           $$->attr.name = copyString(id);
-          $$->kind.exp = ParamK;
+          $$->kind.exp = VarParamK;
           $$->size = 0;
           $$->lineno = lineno;
           $$->type = $1->type;
           $$->child[0] = $1;
         } | tipo ID ACO FCO{
-         $$ = newExpNode(ParamK);
+         $$ = newExpNode(VetParamK);
           $$->child[0] = $1;
           $$->attr.name = copyString(id);
-          $$->kind.exp = ParamK;
+          $$->kind.exp = VetParamK;
           $$->size = 0;
           $$->lineno = lineno;
           $$->type = $1->type;
