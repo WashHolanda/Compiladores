@@ -4,8 +4,8 @@
 #include "parse.h"
 #include "analyze.h"
 #include "cgen.h"
-//#include "assembly.h"
-//#include "binary.h"
+#include "assembly.h"
+#include "binary.h"
 
 extern int check_return;
 int lineno = 1;
@@ -41,15 +41,15 @@ int main( int argc, char * argv[] ) {
   fprintf(listing,"\nCOMPILAÇÃO DO ARQUIVO C-: %s\n",pgm);
 
   syntaxTree = parse();
-  if (TraceParse){
-    if(Error == TRUE)
+  if(Error == TRUE)
       exit(-1);
+  if (TraceParse){
     fprintf(listing,"\nÁrvore Sintática:\n");
     printTree(syntaxTree);
   }
   buildSymtab(syntaxTree);
   if (TraceAnalyze){
-     fprintf(listing,"Compilação Concluida!\n"); 
+    fprintf(listing,"Compilação Concluida!\n"); 
   } 
 
   if (!Error){
@@ -58,7 +58,7 @@ int main( int argc, char * argv[] ) {
     codefile = (char *) calloc(12+fnlen+4, sizeof(char));
     strcpy(codefile,"binarios/");
     strncat(codefile,pgm,fnlen);
-    strcat(codefile,".inst");
+    strcat(codefile,".bin");
     code = fopen(codefile,"w");
     if (code == NULL) {
       printf("Unable to open %s\n",codefile);
@@ -68,11 +68,11 @@ int main( int argc, char * argv[] ) {
     codeGen(syntaxTree,codefile);//GERADOR DE COD. INTERMED.
     fprintf(listing,"Código Intermediário Criado!\n");
     fprintf(listing,"\nGerando Código Assembly...\n");
-    generateAssembly(getIntermediate());
+    generateAssembly(getIntermediate()); //GERADOR DE COD. ASSEMBLY
     fprintf(listing,"\nCódigo Assembly Gerado!\n");
-    /*fprintf(listing,"\nGerando Código Binário...\n");
-    generateBinary(getAssembly(), getSize());
-    fprintf(listing,"\nCódigo Binário Gerado!\n");*/
+    fprintf(listing,"\nGerando Código Binário...\n");
+    generateBinary(getAssembly()); //GERADOR DE COD. BINÁRIO
+    fprintf(listing,"\nCódigo Binário Gerado!\n");
     fclose(code);
   } 
   fclose(source);

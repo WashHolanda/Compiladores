@@ -17,8 +17,8 @@ int jmpmain = 0;
 
 const char * InstrNames[] =  {  "add", "sub", "mult", "divi", "and", "or", "xor", "nor", "sll", "srl", "slt", "lw", "sw", "in", "out", "addi", "subi", "multi", "divim", "slti", "andi", "ori", "beq", "bne", "blt", "bgt", "bgeq", "bleq", "j", "jal", "jst", "hlt" };
 
-const char * regNames[] = { "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18", "$p1", "$p2", "$p3", "$p4", "$p5", "$p6", "$p7", "$p8", "$p9", "$p10",
-                "$sp", "$gp", "$ret", "$zero" };
+const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18", "$p1", "$p2", "$p3", "$p4", "$p5", "$p6", "$p7", "$p8", "$p9", "$p10",
+                "$sp", "$gp", "$ret"};
 
 
 void insertFun (char * id) {
@@ -326,7 +326,6 @@ void generateInstruction (QuadList l) {
                     instructionFormatR(add, $zero, a1.contents.val, $ret);
                 if(strcmp(a1.contents.var.scope, "main") != 0){
                     aux = getFunSize(a1.contents.var.scope);
-                    //instructionFormatIorD(subi,$sp, $sp, aux, NULL);
                     instructionFormatJ(jst, -1, NULL);
                 }
                 else
@@ -348,7 +347,6 @@ void generateInstruction (QuadList l) {
                     instructionFormatJ(j, -1, "end");
                 else{
                     aux = getFunSize(a1.contents.var.name);
-                    //instructionFormatIorD(subi, $sp, $sp, aux, NULL);
                     instructionFormatJ(jst, 0, NULL);
                 }
                 break;
@@ -453,8 +451,4 @@ void generateAssembly (QuadList head) {
 
 AssemblyCode getAssembly() {
     return codehead;
-}
-
-int getSize() {
-    return line - 1;
 }
