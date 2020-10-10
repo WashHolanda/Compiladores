@@ -1,6 +1,5 @@
 #include "globals.h"
 #include "symtab.h"
-//#include "code.h"
 #include "cgen.h"
 #include "assembly.h"
 
