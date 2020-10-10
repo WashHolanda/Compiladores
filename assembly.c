@@ -135,11 +135,11 @@ void instructionFormatJ (InstrKind opcode, int im, char * imlbl) { // Tipo J
 }
 
 Reg getParamReg () {
-    return (Reg) nregtemp + curparam;
+    return (Reg) nregtemp + 1 + curparam;
 }
 
 Reg getArgReg () {
-    return (Reg) nregtemp + curarg;
+    return (Reg) nregtemp + curarg + 1;
 }
 
 Reg getReg (char * regName) {

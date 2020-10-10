@@ -4,7 +4,9 @@ int main(void){
     a = 3;
     b = 5;
 
-    a = b;
+    a = a*b;
+
+    output(a);
 
     return 1;
 }

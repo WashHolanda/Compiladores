@@ -4,5 +4,6 @@ void teste(int j[]){
 
 void main(void){
     int a[10];
+
     teste(a);
 }

@@ -15,7 +15,7 @@ FILE * code;
 
 int TraceScan = FALSE; // Se TRUE, imprime tokens do scanner
 int TraceParse = FALSE; // Se TRUE, imprime árvore sintática
-int TraceAnalyze = TRUE; // Se TRUE, imprime tabela de símbolos
+int TraceAnalyze = FALSE; // Se TRUE, imprime tabela de símbolos
 int TraceCode = FALSE; // Se TRUE, imprime como está sendo feito o Código Intermediário
 int Error = FALSE;
 
