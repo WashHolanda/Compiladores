@@ -3,9 +3,12 @@ int main(void){
     int b;
     a = 3;
     b = 5;
-
-    a = a*b;
-
+    if(a<b){
+        if(b == 2){
+            a = a*b;
+        }
+    }
+    
     output(a);
 
     return 1;

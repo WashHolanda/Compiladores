@@ -126,7 +126,7 @@ Address addr_createString(char *name, char *scope){
 static void genStmt(TreeNode *tree){
   TreeNode *p1, *p2, *p3;
   Address addr1, addr2, addr3;
-  Address aux1, aux2;
+  Address aux1, aux2, tempLabel;
   int loc1, loc2, loc3;
   char *label;
   char *temp;
@@ -140,13 +140,14 @@ static void genStmt(TreeNode *tree){
     p3 = tree->child[2]; //if false
     // condicao if
     cGen(p1);
+    tempLabel = labelAux;
     // if true
     cGen(p2);
     //goes to end
     loc2 = location;
     quad_insert(opGOTO, empty, empty, empty); //jump else
     // end if
-    label = labelAux.contents.var.name;
+    label = tempLabel.contents.var.name;
     quad_insert(opLAB,addr_createString(label, escopoAtual), empty, empty);
     // if false comes to here
     quad_update(loc1, addr1,addr_createString(label, escopoAtual), empty);
@@ -176,12 +177,13 @@ static void genStmt(TreeNode *tree){
     quad_insert(opLAB,addr_createString(label, escopoAtual), empty, empty); //you only know the label in the end of stmt
     // condicao while
     cGen(p1);
+    tempLabel = labelAux;
     // while
     cGen(p2); //body
     loc3 = location;
     quad_insert(opGOTO,addr_createString(label, escopoAtual), empty, empty);
     // final
-    label = labelAux.contents.var.name;
+    label = tempLabel.contents.var.name;
     quad_insert(opLAB,addr_createString(label, escopoAtual), empty, empty);
     //if condition is false comes to here
     quad_update(loc1, addr1,addr_createString(label, escopoAtual), empty);
