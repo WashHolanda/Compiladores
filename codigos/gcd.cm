@@ -14,8 +14,6 @@ int gcd (int u, int v){
 void main (void){
     int x; 
     int y;
-    int z;
-    int w;
 
     x = input ();
     y = input ();

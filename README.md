@@ -13,13 +13,3 @@ $ ./run.sh
 $ ./compilador [diretorio do arquivo a ser testado]
 
 $ ./clean.sh
-
-ALTERAÇÕES QUE PRECISAM SER FEITAS:
-
-Escolher quadras do CI
-
-Gerar código intermediário
-
-Gerar código assembly
-
-Gerar código binário

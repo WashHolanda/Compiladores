@@ -1,23 +1,23 @@
 /* Um programa para calcular a sequencia de fibonacci.*/
 
-int c;
+int cont;
 
 int fibonacci (int n){
     int next;
     int first;
     int second;
-    c = 0;
+    cont = 0;
 
-    while(c<=n){
-        if(c<=1){
-            next = c;
+    while(cont<=n){
+        if(cont<=1){
+            next = cont;
         }
         else{
             next = first + second;
             first = second;
             second = next;
         }
-        c = c + 1;
+        cont = cont + 1;
     }
     return next;
 }

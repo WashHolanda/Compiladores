@@ -31,27 +31,27 @@ char * assembly2binary (Instruction i) {
     char * bin = (char *) malloc((35 + 5) * sizeof(char));
       if (i.format == formatR) {
         if(i.opcode == sll || i.opcode == srl)
-            sprintf(bin, "%s %s %s %s %s %s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], regBins[i.reg3], "00000", functBins[i.opcode]); //deslocamento deve ser adicionado
+            sprintf(bin, "%s_%s_%s_%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], regBins[i.reg3], "00000", functBins[i.opcode]); //deslocamento deve ser adicionado
         else
-            sprintf(bin, "%s %s %s %s %s %s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], regBins[i.reg3], "00000", functBins[i.opcode]);
+            sprintf(bin, "%s_%s_%s_%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], regBins[i.reg3], "00000", functBins[i.opcode]);
     }
     else if (i.format == formatIorD) {
         if(i.opcode == lw || i.opcode == sw)
-            sprintf(bin, "%s %s %s %s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], getImediate(i.im, 18));
+            sprintf(bin, "%s_%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], getImediate(i.im, 18));
         else
-            sprintf(bin, "%s %s %s %s %s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], getImediate(i.im, 16), functBins[i.opcode]);
+            sprintf(bin, "%s_%s_%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], getImediate(i.im, 16), functBins[i.opcode]);
     }
     else if (i.format == formatO) {
         if (i.opcode == in)
-            sprintf(bin, "%s %s %s %s", opcodeBins[i.opcode], regBins[$zero], regBins[i.reg1], "000000000000000000");
+            sprintf(bin, "%s_%s_%s_%s", opcodeBins[i.opcode], regBins[$zero], regBins[i.reg1], "000000000000000000");
         if (i.opcode == out)
-            sprintf(bin, "%s %s %s", opcodeBins[i.opcode], regBins[i.reg1], "00000000000000000000000");
+            sprintf(bin, "%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], "00000000000000000000000");
     }
     else {
         if (i.opcode == jst)
-            sprintf(bin, "%s %s", opcodeBins[i.opcode], "0000000000000000000000000000");
+            sprintf(bin, "%s_%s", opcodeBins[i.opcode], "0000000000000000000000000000");
         else
-            sprintf(bin, "%s %s", opcodeBins[i.opcode], getImediate(i.im, 28));
+            sprintf(bin, "%s_%s", opcodeBins[i.opcode], getImediate(i.im, 28));
     }
     return bin;
 }

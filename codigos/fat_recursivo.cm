@@ -1,13 +1,10 @@
 int fatorial(int n){
     int vfat;
-    int x;
-    int y;
-    int z[4];
   
   if ( n <= 1 )
     return (1);
   else{
-    vfat = n * fatorial(n - 1);
+    vfat = fatorial(n - 1) * n ;
     return (vfat);
   }
 }
@@ -19,6 +16,8 @@ int main(void){
   numero = input();
   
   f = fatorial(numero);
+
+  output(f);
   
   return 0;
 }
