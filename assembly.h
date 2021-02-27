@@ -6,7 +6,7 @@
 #define sploc 32  // tam 32 
 //#define raloc 47 // tam 16
 
-typedef enum {  add, sub, mult, divi, and, or, xor, nor, sll, srl, slt, lw, sw, in, out, addi, subi, multi, divim, slti, andi, ori, beq, bne, blt, bgt, bleq, bgeq, j, jal, jst, spc, hlt } InstrKind;
+typedef enum {  add, sub, mult, divi, and, or, xor, nor, sll, srl, slt, lw, sw, in, out, addi, subi, multi, divim, slti, andi, ori, beq, bne, blt, bgt, bleq, bgeq, j, jal, jst, spc, lst, sst, hlt } InstrKind;
 
 typedef enum {  formatR, formatIorD, formatO, formatJ } InstrFormat;
 typedef enum {  instr, lbl } LineKind;

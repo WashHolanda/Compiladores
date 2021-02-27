@@ -1,7 +1,14 @@
 void main (void){
-    int i;
-    i = 0;
+    int countTopStack;
+    countTopStack = 0;
 
     storePC();
     
+    while(countTopStack < 10){
+        storeStack();
+    }
+
+    while(countTopStack < 10){
+        loadStack();
+    }
 }
