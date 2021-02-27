@@ -15,7 +15,7 @@ int narg = 0;
 int jmpmain = 0;
 
 
-const char * InstrNames[] =  {  "add", "sub", "mult", "divi", "and", "or", "xor", "nor", "sll", "srl", "slt", "lw", "sw", "in", "out", "addi", "subi", "multi", "divim", "slti", "andi", "ori", "beq", "bne", "blt", "bgt", "bgeq", "bleq", "j", "jal", "jst", "hlt" };
+const char * InstrNames[] =  {  "add", "sub", "mult", "divi", "and", "or", "xor", "nor", "sll", "srl", "slt", "lw", "sw", "in", "out", "addi", "subi", "multi", "divim", "slti", "andi", "ori", "beq", "bne", "blt", "bgt", "bleq", "bgeq", "j", "jal", "jst", "spc", "hlt" };
 
 const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18", "$p1", "$p2", "$p3", "$p4", "$p5", "$p6", "$p7", "$p8", "$p9", "$p10",
                 "$sp", "$gp", "$ret"};
@@ -363,6 +363,15 @@ void generateInstruction (QuadList l) {
                 else if (strcmp(a2.contents.var.name, "output") == 0) {
                     instructionFormatO(out, getArgReg(), 0, NULL);
                 }
+                
+                else if (strcmp(a2.contents.var.name, "storePC") == 0){
+                    instructionFormatJ(spc, 0, NULL);
+                }
+                /*
+                else if (strcmp(a2.contents.var.name, "storeStack") == 0){
+                    
+                }
+                */
                 else {
                     aux = getFunSize(a1.contents.var.scope);
                     instructionFormatIorD(addi,$sp,$sp,aux,NULL);

@@ -114,7 +114,7 @@ static void insertNode( TreeNode * t) {
           }
           break;
         case AtivK:
-          if (st_lookup(t->attr.name, escopo) == -1 && strcmp(t->attr.name, "input")!=0 && strcmp(t->attr.name, "output")!=0){
+          if (st_lookup(t->attr.name, escopo) == -1 && strcmp(t->attr.name, "input")!=0 && strcmp(t->attr.name, "output")!=0 && strcmp(t->attr.name, "storePC")!=0){
             fprintf(listing,"Erro Semântico: A função '%s' não foi declarada. [%d]\n", t->attr.name, t->lineno);
             Error = TRUE;
           }
