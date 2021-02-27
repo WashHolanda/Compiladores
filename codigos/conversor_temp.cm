@@ -1,0 +1,31 @@
+int kelvin(void){
+    int temp;
+
+    temp = input();
+    
+    return temp + 273;
+}
+
+int fahrenheit(void){
+    int temp;
+
+    temp = input();
+
+    return ((5*temp) - 160)/9;
+}
+
+void main (void){
+    int op;
+    int temp;
+
+    op = input();
+
+    if(op == 0){
+        temp = kelvin();
+    }
+    else{
+        temp = fahrenheit();
+    }
+
+    output(temp);
+}

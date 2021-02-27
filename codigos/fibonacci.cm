@@ -6,11 +6,18 @@ int fibonacci (int n){
     int next;
     int first;
     int second;
-    cont = 0;
+    first = 0;
+    second = 1;
+    cont = 1;
 
     while(cont<=n){
-        if(cont<=1){
-            next = cont;
+        if(cont<=2){
+            if(cont == 1){
+                next = first;
+            }
+            else{
+                next = second;
+            }
         }
         else{
             next = first + second;
