@@ -23,9 +23,6 @@
 #define TRUE 1
 #endif
 
-/* MAXRESERVED = o número de palavras reservadas */
-#define MAXRESERVED 8
-
 /* Yacc/Bison gera os próprios valores inteiros para os tokens */
 typedef int TokenType;
 
