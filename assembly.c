@@ -5,8 +5,8 @@
 
 AssemblyCode codehead = NULL;
 FunList funlisthead = NULL;
-
-int line = 0;
+ 
+int line = process0; // Alterar aqui qual processo será compilado
 int nscopes = 0;
 int curmemloc = 0;
 int curparam = 0;
@@ -193,8 +193,8 @@ int getFunSize (char * id) {
 void initCode (QuadList head) {
     QuadList l = head;
     Quad q;
-    instructionFormatIorD(addi,$zero,$gp, gploc, NULL);
-    instructionFormatIorD(addi,$zero,$sp, sploc, NULL);
+    instructionFormatIorD(addi,$zero,$gp, process0, NULL); // Alterar aqui o processo
+    instructionFormatIorD(addi,$zero,$sp, (process0+32), NULL); // Alterar aqui o processo
     insertFun("global");
 }
 
@@ -369,10 +369,10 @@ void generateInstruction (QuadList l) {
                 }
                 
                 else if (strcmp(a2.contents.var.name, "storeStack") == 0){
-                    instructionFormatIorD(sst, $zero, $zero, 100, NULL); // alterar valor 100 pro valor da posição da pilha daquele processo na mem
+                    instructionFormatIorD(sst, getArgReg(), $zero, 0, NULL);
                 }
                 else if (strcmp(a2.contents.var.name, "loadStack") == 0){
-                    instructionFormatIorD(lst, $zero, $zero, 110, NULL); // alterar valor 110 pro valor da posição da pilha daquele processo na mem
+                    instructionFormatIorD(lst, getArgReg(), $zero, 0, NULL); // alterar valor 110 pro valor da posição da pilha daquele processo na mem
                 }
                 else {
                     aux = getFunSize(a1.contents.var.scope);

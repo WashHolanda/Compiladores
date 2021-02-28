@@ -291,7 +291,7 @@ static void genExp(TreeNode *tree){
     // if main
     if (strcmp(tree->attr.name, "main") == 0)
       mainLocation = location;
-    if ((strcmp(tree->attr.name, "input") != 0) && (strcmp(tree->attr.name, "output") != 0)){
+    if ((strcmp(tree->attr.name, "input") != 0) && (strcmp(tree->attr.name, "output") != 0) && (strcmp(tree->attr.name, "storeStack") != 0) && (strcmp(tree->attr.name, "loadStack") != 0)){
       quad_insert(opFUN, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(posMem), empty);
       // params
       p1 = tree->child[1];

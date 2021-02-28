@@ -1,11 +1,21 @@
+int processID[3];
+int processSize[3];
+
 void main (void){
     int countTopStack;
     countTopStack = 0;
+    processID[0] = 1;
+    processID[1] = 2;
+    processID[2] = 3;
+    processSize[0] = 5;
+    processSize[1] = 15;
+    processSize[2] = 5;
 
     storePC();
-    
+
     while(countTopStack < 10){
-        storeStack();
+        storeStack(processID[2]+countTopStack);
+        countTopStack = countTopStack + 1;
     }
 
     while(countTopStack < 10){
