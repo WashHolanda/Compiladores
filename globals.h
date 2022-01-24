@@ -45,7 +45,7 @@ typedef enum {Void,Integer,Boolean} ExpType;
 typedef enum {INTTYPE, VOIDTYPE, NULLL} dataTypes;
 typedef enum {VAR, FUN, CALL, VET, RETT} IDTypes;
 
-#define MAXCHILDREN 3
+#define MAXCHILDREN 8
 
 typedef struct treeNode {
   struct treeNode * child[MAXCHILDREN];

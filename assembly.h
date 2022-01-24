@@ -2,10 +2,9 @@
 #define nregtemp 18
 #define nregparam 10
 
-#define process0 42 // Sistema Operacional
-#define process1 342 // Fatorial Recursivo
-#define process2 642 // Fibonacci
-#define process3 942 // Conversor de Temperatura
+#define process0 74 // Sistema Operacional
+#define process1 600 // Fatorial Recursivo
+#define process2 942 // Conversor de Temperatura
 
 typedef enum {  add, sub, mult, divi, and, or, xor, nor, sll, srl, slt, lw, sw, in, out, addi, subi, multi, divim, slti, andi, ori, beq, bne, blt, bgt, bleq, bgeq, j, jal, jst, spc, lst, sst, hlt } InstrKind;
 
