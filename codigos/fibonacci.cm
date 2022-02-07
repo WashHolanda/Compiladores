@@ -1,8 +1,7 @@
 /* Um programa para calcular a sequencia de fibonacci.*/
 
-int cont;
-
 int fibonacci (int n){
+    int cont;
     int next;
     int first;
     int second;

@@ -17,8 +17,10 @@ int jmpmain = 0;
 
 const char * InstrNames[] =  {  "add", "sub", "mult", "divi", "and", "or", "xor", "nor", "sll", "srl", "slt", "lw", "sw", "in", "out", "addi", "subi", "multi", "divim", "slti", "andi", "ori", "beq", "bne", "blt", "bgt", "bleq", "bgeq", "j", "jal", "jst", "spc", "lst", "sst", "hlt" };
 
-const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18", "$p1", "$p2", "$p3", "$p4", "$p5", "$p6", "$p7", "$p8", "$p9", "$p10",
-                "$sp", "$gp", "$ret"};
+/*const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18", "$p1", "$p2", "$p3", "$p4", "$p5", "$p6", "$p7", "$p8", "$p9", "$p10",
+                "$sp", "$gp", "$ret"};*/
+
+const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10", "$p1", "$p2", "$p3", "$p4", "$p5", "$so1", "$so2", "$so3", "$so4", "$so5", "$so6", "$so7", "$so8", "$so9", "$so10", "$so11", "$so12", "$so13","$sp", "$gp", "$ret"};
 
 
 void insertFun (char * id) {
