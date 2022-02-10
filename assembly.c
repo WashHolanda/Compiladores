@@ -195,8 +195,8 @@ int getFunSize (char * id) {
 void initCode (QuadList head) {
     QuadList l = head;
     Quad q;
-    instructionFormatIorD(addi,$zero,$gp, process0, NULL); // Alterar aqui o processo
-    instructionFormatIorD(addi,$zero,$sp, (process0+32), NULL); // Alterar aqui o processo
+    instructionFormatIorD(addi,$zero,$gp, GPprocess0, NULL); // Alterar aqui $gp do processo
+    instructionFormatIorD(addi,$zero,$sp, SPprocess0, NULL); // Alterar aqui $sp do processo
     insertFun("global");
 }
 

@@ -2,9 +2,17 @@
 #define nregtemp 10
 #define nregparam 5
 
-#define process0 1 // Sistema Operacional
-#define process1 600 // Fatorial Recursivo
-#define process2 900 // Fibonacci
+#define process0 0 // Instruções Sistema Operacional
+#define GPprocess0 42 // $gp do Sistema Operacional
+#define SPprocess0 74 // $sp do Sistema Operacional
+
+#define process1 600 // Instruções Fatorial Recursivo
+#define GPprocess1 642 // $gp do Fatorial Recursivo
+#define SPprocess1 674 // $sp do Fatorial Recursivo
+
+#define process2 900 // Instruções Fibonacci
+#define GPprocess2 942 // $gp do Fibonacci
+#define SPprocess2 974 // $sp do Fibonacci
 
 typedef enum {  add, sub, mult, divi, and, or, xor, nor, sll, srl, slt, lw, sw, in, out, addi, subi, multi, divim, slti, andi, ori, beq, bne, blt, bgt, bleq, bgeq, j, jal, jst, spc, lst, sst, hlt } InstrKind;
 
