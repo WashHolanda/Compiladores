@@ -1,6 +1,6 @@
 #define nregisters 32
-#define nregtemp 10
-#define nregparam 5
+#define nregtemp 12
+#define nregparam 6
 
 #define process0 0 // Instruções Sistema Operacional
 #define GPprocess0 42 // $gp do Sistema Operacional
@@ -21,9 +21,7 @@ typedef enum {  instr, lbl } LineKind;
 
 typedef enum {  simple, vector, address } VarKind;
 
-/* enum { $zero, $t1, $t2, $t3, $t4, $t5, $t6, $t7, $t8, $t9, $t10, $t11, $t12, $t13, $t14, $t15, $t16, $t17, $t18, $p1, $p2, $p3, $p4, $p5, $p6, $p7, $p8, $p9, $p10, $sp, $gp, $ret } Reg;*/
-
-typedef enum { $zero, $t1, $t2, $t3, $t4, $t5, $t6, $t7, $t8, $t9, $t10, $p1, $p2, $p3, $p4, $p5, $so1, $so2, $so3, $so4, $so5, $so6, $so7, $so8, $so9, $so10, $so11, $so12, $so13, $sp, $gp, $ret} Reg;
+typedef enum { $zero, $t1, $t2, $t3, $t4, $t5, $t6, $t7, $t8, $t9, $t10, $t11, $t12, $p1, $p2, $p3, $p4, $p5, $p6, $so1, $so2, $so3, $so4, $so5, $so6, $so7, $so8, $so9, $ctrl, $sp, $gp, $ret} Reg;
 
 typedef struct {
     InstrFormat format;

@@ -13,15 +13,12 @@ int curparam = 0;
 int curarg = 0;
 int narg = 0;
 int jmpmain = 0;
+int i;
 
 
 const char * InstrNames[] =  {  "add", "sub", "mult", "divi", "and", "or", "xor", "nor", "sll", "srl", "slt", "lw", "sw", "in", "out", "addi", "subi", "multi", "divim", "slti", "andi", "ori", "beq", "bne", "blt", "bgt", "bleq", "bgeq", "j", "jal", "jst", "spc", "lst", "sst", "hlt" };
 
-/*const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10", "$t11", "$t12", "$t13", "$t14", "$t15", "$t16", "$t17", "$t18", "$p1", "$p2", "$p3", "$p4", "$p5", "$p6", "$p7", "$p8", "$p9", "$p10",
-                "$sp", "$gp", "$ret"};*/
-
-const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10", "$p1", "$p2", "$p3", "$p4", "$p5", "$so1", "$so2", "$so3", "$so4", "$so5", "$so6", "$so7", "$so8", "$so9", "$so10", "$so11", "$so12", "$so13","$sp", "$gp", "$ret"};
-
+const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10","$t11", "$t12", "$p1", "$p2", "$p3", "$p4", "$p5", "$p5", "$so1", "$so2", "$so3", "$so4", "$so5", "$so6", "$so7", "$so8", "$so9", "$ctrl","$sp", "$gp", "$ret"};
 
 void insertFun (char * id) {
     FunList new = (FunList) malloc(sizeof(struct FunListRec));
@@ -375,6 +372,11 @@ void generateInstruction (QuadList l) {
                 }
                 else if (strcmp(a2.contents.var.name, "loadStack") == 0){
                     instructionFormatIorD(lst, getArgReg(), $zero, 0, NULL); // alterar valor 110 pro valor da posição da pilha daquele processo na mem
+                }
+                else if(strcmp(a2.contents.var.name, "storeRegs") == 0){
+                    for(i=0;i<32;i++){
+                        instructionFormatIorD(sw, getArgReg(), $zero, i, NULL);
+                    }
                 }
                 else {
                     aux = getFunSize(a1.contents.var.scope);

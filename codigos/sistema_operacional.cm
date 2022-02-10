@@ -1,24 +1,47 @@
-int processID[3];
-int processSize[3];
+int processA; 
+int processB;
+int flagFinishA;
+int flagFinishB;
+int processFinishA;
+int processFinishB;
+int currentProcess;
+int countTopStack;
+int auxPosition;
 
-void main (void){
-    int countTopStack;
+void armazenaProcessoAtual(void){
     countTopStack = 0;
-    processID[0] = 1;
-    processID[1] = 2;
-    processID[2] = 3;
-    processSize[0] = 5;
-    processSize[1] = 15;
-    processSize[2] = 5;
+    auxPosition = (currentProcess*300)+10;
 
     storePC();
 
-    while(countTopStack < 10){
-        storeStack(processID[2]+countTopStack);
+    storeRegs(auxPosition);
+
+    while(countTopStack <= 9){
+        storeStack((currentProcess*300)+countTopStack);
         countTopStack = countTopStack + 1;
     }
+    countTopStack = 9;
+}
 
-    while(countTopStack < 10){
-        loadStack();
+void carregaNovoProcesso(void){
+    while(countTopStack >= 0){
+        loadStack((currentProcess*300)+countTopStack);
+        countTopStack = countTopStack - 1;
     }
+    countTopStack = 0;
+
+}
+
+void main (void){
+    processA = 2;
+    processB = 3;
+    processFinishA = 646;
+    processFinishB = 972;
+    flagFinishA = 0;
+    flagFinishB = 0;
+    currentProcess = processA;
+
+    armazenaProcessoAtual();
+
+
 }
