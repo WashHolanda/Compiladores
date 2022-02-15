@@ -1,6 +1,7 @@
 #define nregisters 32
 #define nregtemp 12
 #define nregparam 6
+#define nregso 6
 
 #define process0 0 // Instruções Sistema Operacional
 #define GPprocess0 42 // $gp do Sistema Operacional
@@ -14,6 +15,8 @@
 #define GPprocess2 942 // $gp do Fibonacci
 #define SPprocess2 974 // $sp do Fibonacci
 
+extern int condGP;
+
 typedef enum {  add, sub, mult, divi, and, or, xor, nor, sll, srl, slt, lw, sw, in, out, addi, subi, multi, divim, slti, andi, ori, beq, bne, blt, bgt, bleq, bgeq, j, jal, jst, spc, lst, sst, hlt } InstrKind;
 
 typedef enum {  formatR, formatIorD, formatO, formatJ } InstrFormat;
@@ -21,7 +24,7 @@ typedef enum {  instr, lbl } LineKind;
 
 typedef enum {  simple, vector, address } VarKind;
 
-typedef enum { $zero, $t1, $t2, $t3, $t4, $t5, $t6, $t7, $t8, $t9, $t10, $t11, $t12, $p1, $p2, $p3, $p4, $p5, $p6, $so1, $so2, $so3, $so4, $so5, $so6, $so7, $so8, $so9, $ctrl, $sp, $gp, $ret} Reg;
+typedef enum { $zero, $t1, $t2, $t3, $t4, $t5, $t6, $t7, $t8, $t9, $t10, $t11, $t12, $p1, $p2, $p3, $p4, $p5, $p6, $s1, $s2, $s3, $s4, $s5, $s6, $ps1, $ssp, $sgp, $ctrl, $sp, $gp, $ret} Reg;
 
 typedef struct {
     InstrFormat format;

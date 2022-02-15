@@ -23,6 +23,7 @@ int ntemp = 1;
 int nparams = -1;
 int posMem;
 char escopoAtual[30] = "global";
+int nso = 1;
 
 Address labelAux;
 Address aux;
@@ -86,10 +87,18 @@ char *newLabel(){
 }
 
 char *newTemp(){
-  char *temp = (char *)malloc((ntemp_size + 3) * sizeof(char));
-  sprintf(temp, "$t%d", ntemp);
-  ntemp = (ntemp % nregtemp)+1; //NÚMERO DE REGISTRADORES TEMPORÁRIOS = nregtemp
-  return temp;
+  if(condGP == 0){
+    char *temp = (char *)malloc((ntemp_size + 3) * sizeof(char));
+    sprintf(temp, "$s%d", nso);
+    nso = (nso % nregso)+1;
+    return temp;
+  }
+  else{
+    char *temp = (char *)malloc((ntemp_size + 3) * sizeof(char));
+    sprintf(temp, "$t%d", ntemp);
+    ntemp = (ntemp % nregtemp)+1; //NÚMERO DE REGISTRADORES TEMPORÁRIOS = nregtemp
+    return temp;
+  }
 }
 
 Address addr_createEmpty(){
@@ -291,7 +300,7 @@ static void genExp(TreeNode *tree){
     // if main
     if (strcmp(tree->attr.name, "main") == 0)
       mainLocation = location;
-    if ((strcmp(tree->attr.name, "input") != 0) && (strcmp(tree->attr.name, "output") != 0) && (strcmp(tree->attr.name, "storeStack") != 0) && (strcmp(tree->attr.name, "loadStack") != 0)){
+    if ((strcmp(tree->attr.name, "input") != 0) && (strcmp(tree->attr.name, "output") != 0) && (strcmp(tree->attr.name, "storeStack") != 0) && (strcmp(tree->attr.name, "loadStack") != 0) && (strcmp(tree->attr.name, "storeRegs") != 0) && (strcmp(tree->attr.name, "loadRegs") != 0)){
       quad_insert(opFUN, addr_createString(tree->attr.name, escopoAtual), addr_createIntConst(posMem), empty);
       // params
       p1 = tree->child[1];
