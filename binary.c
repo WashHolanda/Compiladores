@@ -31,26 +31,34 @@ char * assembly2binary (Instruction i) {
     char * bin = (char *) malloc((35 + 5) * sizeof(char));
       if (i.format == formatR) {
         if(i.opcode == sll || i.opcode == srl)
+            //sprintf(bin, "{7'b%s,5'd%d,5'd%d,5'd%d,5'b%s,8'b%s}", opcodeBins[i.opcode], i.reg1, i.reg2, i.reg3, "00000", functBins[i.opcode]); //deslocamento deve ser adicionado no lugar do "00000"
             sprintf(bin, "%s_%s_%s_%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], regBins[i.reg3], "00000", functBins[i.opcode]); //deslocamento deve ser adicionado no lugar do "00000"
         else
+            //sprintf(bin, "{7'b%s,5'd%d,5'd%d,5'd%d,5'b%s,8'b%s}", opcodeBins[i.opcode], i.reg1, i.reg2, i.reg3, "00000", functBins[i.opcode]);
             sprintf(bin, "%s_%s_%s_%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], regBins[i.reg3], "00000", functBins[i.opcode]);
     }
     else if (i.format == formatIorD) {
         if(i.opcode == lw || i.opcode == sw || i.opcode == lst ||i.opcode == sst)
             sprintf(bin, "%s_%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], getImediate(i.im, 18));
+            //sprintf(bin, "{7'b%s,5'd%d,5'd%d,18'd%d}", opcodeBins[i.opcode], i.reg1, i.reg2, i.im);
         else
+            //sprintf(bin, "{7'b%s,5'd%d,5'd%d,16'd%d,2'b%s}", opcodeBins[i.opcode], i.reg1, i.reg2, i.im, functBins[i.opcode]);
             sprintf(bin, "%s_%s_%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], regBins[i.reg2], getImediate(i.im, 16), functBins[i.opcode]);
     }
     else if (i.format == formatO) {
         if (i.opcode == in)
+            //sprintf(bin, "{7'b%s,5'd%d,5'd%d,%s}", opcodeBins[i.opcode], 0, i.reg1, "000000000000000000");
             sprintf(bin, "%s_%s_%s_%s", opcodeBins[i.opcode], regBins[$zero], regBins[i.reg1], "000000000000000000");
         if (i.opcode == out)
+            //sprintf(bin, "{7'b%s,5'd%d,%s}", opcodeBins[i.opcode], i.reg1, "00000000000000000000000");
             sprintf(bin, "%s_%s_%s", opcodeBins[i.opcode], regBins[i.reg1], "00000000000000000000000");
     }
     else {
         if (i.opcode == jst || i.opcode == spc)
+            //sprintf(bin, "{7'b%s,%s}", opcodeBins[i.opcode], "0000000000000000000000000000");
             sprintf(bin, "%s_%s", opcodeBins[i.opcode], "0000000000000000000000000000");
         else
+            //sprintf(bin, "{7'b%s,28'd%d}", opcodeBins[i.opcode], i.im);
             sprintf(bin, "%s_%s", opcodeBins[i.opcode], getImediate(i.im, 28));
     }
     return bin;
@@ -65,6 +73,8 @@ void generateBinary (AssemblyCode head) {
 
     while (a != NULL) {
         if (a->kind == instr) {
+            /*fprintf(c, "ram[%d] = ", a->lineno);
+            printf("ram[%d] = ", a->lineno);*/
             fprintf(c, "ram[%d] = 35'b", a->lineno);
             printf("ram[%d] = 35'b", a->lineno);
             bin = assembly2binary(a->line.instruction);

@@ -9,10 +9,10 @@ int countTopStack;
 int auxPosition;
 
 void armazenaProcessoAtual(void){
+    storePC();
+    
     countTopStack = 0;
     auxPosition = (currentProcess*300)+10;
-
-    storePC();
 
     storeRegs(auxPosition);
 
@@ -20,16 +20,16 @@ void armazenaProcessoAtual(void){
         storeStack((currentProcess*300)+countTopStack);
         countTopStack = countTopStack + 1;
     }
-    countTopStack = 9;
-}
+    countTopStack = 10;
 
-void carregaNovoProcesso(void){
-    while(countTopStack >= 0){
-        loadStack((currentProcess*300)+countTopStack);
+    flagFinishA = 1+1+1+1+1+1;
+
+    while(countTopStack > 0){
+        loadStack((currentProcess*300)+(countTopStack-1));
         countTopStack = countTopStack - 1;
     }
-    countTopStack = 0;
 
+    loadRegs(auxPosition);
 }
 
 void main (void){
@@ -40,8 +40,4 @@ void main (void){
     flagFinishA = 0;
     flagFinishB = 0;
     currentProcess = processA;
-
-    armazenaProcessoAtual();
-
-
 }
