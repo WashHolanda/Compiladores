@@ -7,6 +7,7 @@ AssemblyCode codehead = NULL;
 FunList funlisthead = NULL;
  
 int line = process0; // Alterar aqui qual processo será compilado
+int condGP = process0; //Define se vai usar $gp ou $sgp
 int nscopes = 0;
 int curmemloc = 0;
 int curparam = 0;
@@ -18,7 +19,7 @@ int i;
 
 const char * InstrNames[] =  {  "add", "sub", "mult", "divi", "and", "or", "xor", "nor", "sll", "srl", "slt", "lw", "sw", "in", "out", "addi", "subi", "multi", "divim", "slti", "andi", "ori", "beq", "bne", "blt", "bgt", "bleq", "bgeq", "j", "jal", "jst", "spc", "lst", "sst", "hlt" };
 
-const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10","$t11", "$t12", "$p1", "$p2", "$p3", "$p4", "$p5", "$p5", "$so1", "$so2", "$so3", "$so4", "$so5", "$so6", "$so7", "$so8", "$so9", "$ctrl","$sp", "$gp", "$ret"};
+const char * regNames[] = { "$zero", "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$t8", "$t9", "$t10","$t11", "$t12", "$p1", "$p2", "$p3", "$p4", "$p5", "$p5", "$s1", "$s2", "$s3", "$s4", "$s5", "$s6", "$ps1", "$ssp", "$sgp", "$ctrl","$sp", "$gp", "$ret"};
 
 void insertFun (char * id) {
     FunList new = (FunList) malloc(sizeof(struct FunListRec));
@@ -134,16 +135,33 @@ void instructionFormatJ (InstrKind opcode, int im, char * imlbl) { // Tipo J
 }
 
 Reg getParamReg () {
-    return (Reg) nregtemp + 1 + curparam;
+    if(condGP == process0){
+        return (Reg) 25;
+    }
+    else{
+        return (Reg) nregtemp + 1 + curparam;
+    }
 }
 
 Reg getArgReg () {
-    return (Reg) nregtemp + curarg + 1;
+    if(condGP == process0){
+        return (Reg) 25;
+    }
+    else{
+        return (Reg) nregtemp + curarg + 1;
+    }
 }
 
 Reg getReg (char * regName) {
-    for (int i = 0; i < nregisters; i ++) {
-        if (strcmp(regName, regNames[i]) == 0) return (Reg) i;
+    if(condGP == process0){
+        for (int i = 0; i < nregisters; i ++) {
+            if (strcmp(regName, regNames[i]) == 0) return (Reg) i;
+        }
+    }
+    else{
+        for (int i = 0; i < nregisters; i ++) {
+            if (strcmp(regName, regNames[i]) == 0) return (Reg) i;
+        }
     }
     return $zero;
 }
@@ -192,9 +210,16 @@ int getFunSize (char * id) {
 void initCode (QuadList head) {
     QuadList l = head;
     Quad q;
-    instructionFormatIorD(addi,$zero,$gp, GPprocess0, NULL); // Alterar aqui $gp do processo
-    instructionFormatIorD(addi,$zero,$sp, SPprocess0, NULL); // Alterar aqui $sp do processo
-    insertFun("global");
+    if(condGP == process0){
+        instructionFormatIorD(addi,$zero,$sgp, GPprocess0, NULL); 
+        instructionFormatIorD(addi,$zero,$ssp, SPprocess0, NULL);
+        insertFun("global");
+    }
+    else{
+        instructionFormatIorD(addi,$zero,$gp, GPprocess1, NULL); // Alterar aqui $gp do processo
+        instructionFormatIorD(addi,$zero,$sp, SPprocess1, NULL); // Alterar aqui $sp do processo
+        insertFun("global");
+    }
 }
 
 void generateInstruction (QuadList l) {
@@ -267,29 +292,60 @@ void generateInstruction (QuadList l) {
             case opLOAD:
                 aux = getMemLoc(a2.contents.var.name, a2.contents.var.scope);
                 if (aux == -1){
-                    aux = getMemLoc(a2.contents.var.name, "global");
-                    instructionFormatIorD(lw, $gp, getReg(a1.contents.var.name), aux, NULL);
+                    if(condGP == process0){
+                        aux = getMemLoc(a2.contents.var.name, "global");
+                        instructionFormatIorD(lw, $sgp, getReg(a1.contents.var.name), aux, NULL); 
+                    }
+                    else{
+                        aux = getMemLoc(a2.contents.var.name, "global");
+                        instructionFormatIorD(lw, $gp, getReg(a1.contents.var.name), aux, NULL);    
+                    }
                 }
-                else
-                    instructionFormatIorD(lw, $sp, getReg(a1.contents.var.name), aux, NULL);
+                else{
+                    if(condGP == process0){
+                        instructionFormatIorD(lw, $ssp, getReg(a1.contents.var.name), aux, NULL);
+                    }
+                    else{
+                        instructionFormatIorD(lw, $sp, getReg(a1.contents.var.name), aux, NULL);
+                    }
+                }
                 break;
     
             case opSTORE:
                 aux = getMemLoc(a1.contents.var.name, a1.contents.var.scope);
                 if (aux == -1) {
-                    aux = getMemLoc(a1.contents.var.name, "global");
-                    v = getVarKind(a1.contents.var.name, "global");
-                    if(v == vector)
-                        instructionFormatIorD(sw, getReg(a2.contents.var.name), getReg(a3.contents.var.name), aux, NULL);
-                    else
-                        instructionFormatIorD(sw, $gp, getReg(a3.contents.var.name), aux, NULL);
+                    if(condGP == process0){
+                        aux = getMemLoc(a1.contents.var.name, "global");
+                        v = getVarKind(a1.contents.var.name, "global");
+                        if(v == vector)
+                            instructionFormatIorD(sw, getReg(a2.contents.var.name), getReg(a3.contents.var.name), aux, NULL);
+                        else
+                            instructionFormatIorD(sw, $sgp, getReg(a3.contents.var.name), aux, NULL);
+                    }
+                    else{
+                        aux = getMemLoc(a1.contents.var.name, "global");
+                        v = getVarKind(a1.contents.var.name, "global");
+                        if(v == vector)
+                            instructionFormatIorD(sw, getReg(a2.contents.var.name), getReg(a3.contents.var.name), aux, NULL);
+                        else
+                            instructionFormatIorD(sw, $gp, getReg(a3.contents.var.name), aux, NULL);
+                    }
                 }
                 else{
-                    v = getVarKind(a1.contents.var.name, a1.contents.var.scope);
-                    if(v == vector)
-                        instructionFormatIorD(sw, getReg(a2.contents.var.name), getReg(a3.contents.var.name), aux, NULL);
-                    else
-                        instructionFormatIorD(sw, $sp, getReg(a3.contents.var.name), aux, NULL);
+                    if(condGP == process0){
+                        v = getVarKind(a1.contents.var.name, a1.contents.var.scope);
+                        if(v == vector)
+                            instructionFormatIorD(sw, getReg(a2.contents.var.name), getReg(a3.contents.var.name), aux, NULL);
+                        else
+                            instructionFormatIorD(sw, $ssp, getReg(a3.contents.var.name), aux, NULL);
+                    }
+                    else{
+                        v = getVarKind(a1.contents.var.name, a1.contents.var.scope);
+                        if(v == vector)
+                            instructionFormatIorD(sw, getReg(a2.contents.var.name), getReg(a3.contents.var.name), aux, NULL);
+                        else
+                            instructionFormatIorD(sw, $sp, getReg(a3.contents.var.name), aux, NULL);
+                    }
                 }
                 break;
             
@@ -301,17 +357,36 @@ void generateInstruction (QuadList l) {
                     v = getVarKind(a2.contents.var.name, a2.contents.var.scope);
                 if (v == vector) {
                     if (aux == -1) { // caso o vetor seja global
-                        aux = getMemLoc(a2.contents.var.name, "global");
-                        instructionFormatR(add, $gp, getReg(a3.contents.var.name),getReg(a3.contents.var.name));
+                        if(condGP == process0){
+                            aux = getMemLoc(a2.contents.var.name, "global");
+                            instructionFormatR(add, $sgp, getReg(a3.contents.var.name),getReg(a3.contents.var.name));
+                        }
+                        else{
+                            aux = getMemLoc(a2.contents.var.name, "global");
+                            instructionFormatR(add, $gp, getReg(a3.contents.var.name),getReg(a3.contents.var.name));
+                        }
                     }
-                    else // caso seja um vetor local
-                        instructionFormatR(add, $sp, getReg(a3.contents.var.name),getReg(a3.contents.var.name));
+                    else{ // caso seja um vetor local
+                        if(condGP == process0){
+                            instructionFormatR(add, $ssp, getReg(a3.contents.var.name),getReg(a3.contents.var.name));
+                        }
+                        else{
+                            instructionFormatR(add, $sp, getReg(a3.contents.var.name),getReg(a3.contents.var.name));
+                        }
+                    }
                     instructionFormatIorD(lw, getReg(a3.contents.var.name), getReg(a1.contents.var.name),aux, NULL);
                 }
-                else {
-                    instructionFormatIorD(lw,$sp,getReg(a1.contents.var.name),getMemLoc(a2.contents.var.name,a2.contents.var.scope),NULL);
-                    instructionFormatR(add, getReg(a3.contents.var.name), getReg(a1.contents.var.name),getReg(a3.contents.var.name));
-                    instructionFormatIorD(lw,getReg(a3.contents.var.name),getReg(a1.contents.var.name),0,NULL);
+                else{
+                    if(condGP == process0){
+                        instructionFormatIorD(lw,$ssp,getReg(a1.contents.var.name),getMemLoc(a2.contents.var.name,a2.contents.var.scope),NULL);
+                        instructionFormatR(add, getReg(a3.contents.var.name), getReg(a1.contents.var.name),getReg(a3.contents.var.name));
+                        instructionFormatIorD(lw,getReg(a3.contents.var.name),getReg(a1.contents.var.name),0,NULL);
+                    }
+                    else{
+                        instructionFormatIorD(lw,$sp,getReg(a1.contents.var.name),getMemLoc(a2.contents.var.name,a2.contents.var.scope),NULL);
+                        instructionFormatR(add, getReg(a3.contents.var.name), getReg(a1.contents.var.name),getReg(a3.contents.var.name));
+                        instructionFormatIorD(lw,getReg(a3.contents.var.name),getReg(a1.contents.var.name),0,NULL);
+                    }
                 }
                 break;
             
@@ -374,15 +449,32 @@ void generateInstruction (QuadList l) {
                     instructionFormatIorD(lst, getArgReg(), $zero, 0, NULL); // alterar valor 110 pro valor da posição da pilha daquele processo na mem
                 }
                 else if(strcmp(a2.contents.var.name, "storeRegs") == 0){
+                    //instructionFormatIorD(multi,getArgReg(),$s2,300,NULL);
+                    //instructionFormatIorD(addi,$s2,$s3,10,NULL);
                     for(i=0;i<32;i++){
-                        instructionFormatIorD(sw, getArgReg(), $zero, i, NULL);
+                        instructionFormatIorD(sw, getArgReg(), i, i, NULL);
                     }
                 }
-                else {
-                    aux = getFunSize(a1.contents.var.scope);
-                    instructionFormatIorD(addi,$sp,$sp,aux,NULL);
-                    instructionFormatJ(jal, -1, a2.contents.var.name);
-                    instructionFormatIorD(subi,$sp, $sp, aux, NULL);
+                else if(strcmp(a2.contents.var.name, "loadRegs") == 0){
+                    //instructionFormatIorD(multi,getArgReg(),$s4,300,NULL);
+                    //instructionFormatIorD(addi,$s4,$s5,10,NULL);
+                    for(i=0;i<32;i++){
+                        instructionFormatIorD(lw, getArgReg(), i, i, NULL);
+                    }
+                }
+                else{
+                    if(condGP == process0){
+                        aux = getFunSize(a1.contents.var.scope);
+                        instructionFormatIorD(addi,$ssp,$ssp,aux,NULL);
+                        instructionFormatJ(jal, -1, a2.contents.var.name);
+                        instructionFormatIorD(subi,$ssp, $ssp, aux, NULL);
+                    }
+                    else{
+                        aux = getFunSize(a1.contents.var.scope);
+                        instructionFormatIorD(addi,$sp,$sp,aux,NULL);
+                        instructionFormatJ(jal, -1, a2.contents.var.name);
+                        instructionFormatIorD(subi,$sp, $sp, aux, NULL);
+                    }
                 }
                 narg = a3.contents.val;
                 curparam = 0;
@@ -391,7 +483,12 @@ void generateInstruction (QuadList l) {
             case opARG:
                 insertVar(a3.contents.var.name, a1.contents.var.name, 1, checkType(l));
                 FunList f = funlisthead;
-                instructionFormatIorD(sw, $sp, getArgReg(), getMemLoc(a1.contents.var.name,a1.contents.var.scope), NULL);
+                if(condGP == process0){
+                    instructionFormatIorD(sw, $ssp, getArgReg(), getMemLoc(a1.contents.var.name,a1.contents.var.scope), NULL);
+                }
+                else{
+                    instructionFormatIorD(sw, $sp, getArgReg(), getMemLoc(a1.contents.var.name,a1.contents.var.scope), NULL);
+                }
                 curarg ++;
                 break;
             
@@ -417,6 +514,9 @@ void generateInstructions (QuadList head) {
     AssemblyCode a = codehead;
     while (a != NULL) {
         if (a->kind == instr) {
+            if(a->line.instruction.opcode == j && a->line.instruction.imlbl == NULL){
+                continue;
+            }
             if (a->line.instruction.opcode == j || a->line.instruction.opcode == jal || a->line.instruction.opcode == beq || a->line.instruction.opcode == bne || a->line.instruction.opcode == blt || a->line.instruction.opcode == bgt ||
             a->line.instruction.opcode == bleq || a->line.instruction.opcode == bgeq) 
                 a->line.instruction.im = getLabelLine(a->line.instruction.imlbl);
