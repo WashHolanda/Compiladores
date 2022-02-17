@@ -2,13 +2,12 @@ int processA;
 int processB;
 int flagFinishA;
 int flagFinishB;
-int processFinishA;
-int processFinishB;
 int currentProcess;
-int countTopStack;
-int auxPosition;
 
-void armazenaProcessoAtual(void){
+int auxPosition;
+int countTopStack;
+
+int endProcess(void){    
     storePC();
     
     countTopStack = 0;
@@ -22,7 +21,52 @@ void armazenaProcessoAtual(void){
     }
     countTopStack = 10;
 
-    flagFinishA = 1+1+1+1+1+1;
+    if(currentProcess == 3){
+        currentProcess = 2;
+        flagFinishB = 1;
+        if(flagFinishA == 1){
+            return 0;
+        }
+    }
+    if(currentProcess == 2){
+        currentProcess = 3;
+        flagFinishA = 1;
+        if(flagFinishB == 1){
+            return 0;
+        }
+    }
+    
+    auxPosition = (currentProcess*300)+10;
+
+    while(countTopStack > 0){
+        loadStack((currentProcess*300)+(countTopStack-1));
+        countTopStack = countTopStack - 1;
+    }
+
+    loadRegs(auxPosition);
+}
+
+void switch(void){    
+    storePC();
+    
+    countTopStack = 0;
+    auxPosition = (currentProcess*300)+10;
+
+    storeRegs(auxPosition);
+
+    while(countTopStack <= 9){
+        storeStack((currentProcess*300)+countTopStack);
+        countTopStack = countTopStack + 1;
+    }
+    countTopStack = 10;
+
+    if(currentProcess == 2){
+        currentProcess = 3;
+    }
+    else{
+        currentProcess = 2;
+    }
+    auxPosition = (currentProcess*300)+10;
 
     while(countTopStack > 0){
         loadStack((currentProcess*300)+(countTopStack-1));
@@ -35,9 +79,11 @@ void armazenaProcessoAtual(void){
 void main (void){
     processA = 2;
     processB = 3;
-    processFinishA = 646;
-    processFinishB = 972;
     flagFinishA = 0;
     flagFinishB = 0;
+
+    loadStack(((processA)+(processB*300)));
+
     currentProcess = processA;
+    loadStack((currentProcess*300));
 }

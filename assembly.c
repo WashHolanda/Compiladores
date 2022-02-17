@@ -449,16 +449,18 @@ void generateInstruction (QuadList l) {
                     instructionFormatIorD(lst, getArgReg(), $zero, 0, NULL); // alterar valor 110 pro valor da posição da pilha daquele processo na mem
                 }
                 else if(strcmp(a2.contents.var.name, "storeRegs") == 0){
-                    //instructionFormatIorD(multi,getArgReg(),$s2,300,NULL);
-                    //instructionFormatIorD(addi,$s2,$s3,10,NULL);
-                    for(i=0;i<32;i++){
+                    for(i=0;i<19;i++){
+                        instructionFormatIorD(sw, getArgReg(), i, i, NULL);
+                    }
+                    for(i=29;i<32;i++){
                         instructionFormatIorD(sw, getArgReg(), i, i, NULL);
                     }
                 }
                 else if(strcmp(a2.contents.var.name, "loadRegs") == 0){
-                    //instructionFormatIorD(multi,getArgReg(),$s4,300,NULL);
-                    //instructionFormatIorD(addi,$s4,$s5,10,NULL);
-                    for(i=0;i<32;i++){
+                    for(i=0;i<19;i++){
+                        instructionFormatIorD(lw, getArgReg(), i, i, NULL);
+                    }
+                    for(i=29;i<32;i++){
                         instructionFormatIorD(lw, getArgReg(), i, i, NULL);
                     }
                 }

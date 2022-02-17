@@ -1,9 +1,0 @@
-void teste(int j[]){
-    j[6] = 2;
-}
-
-void main(void){
-    int a[10];
-    
-    teste(a);
-}
