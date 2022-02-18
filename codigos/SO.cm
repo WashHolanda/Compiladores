@@ -25,14 +25,14 @@ int endProcess(void){
         currentProcess = 2;
         flagFinishB = 1;
         if(flagFinishA == 1){
-            return 0;
+            return 0; //trocado por um jmp 306 (posição do final/halt do SO)
         }
     }
     if(currentProcess == 2){
         currentProcess = 3;
         flagFinishA = 1;
         if(flagFinishB == 1){
-            return 0;
+            return 0; //trocado por um jmp 306 (posição do final/halt do SO)
         }
     }
     
@@ -83,7 +83,17 @@ void main (void){
     flagFinishB = 0;
 
     loadStack(((processA)+(processB*300)));
+    /*
+    Essa chamada de função é trocada pelo código Assembly abaixo depois de compilado:
+        lw $sgp $s3 0 (carrega processA no reg $s3)
+        lw $sgp $s4 1 (carrega processB no reg $s4)
+        addi $zero $s5 300 ($s5 = 0+300, funciona como um load imediate)
+        mult $s3 $s5 $s6 ($s6 = $s3*$s5 ou $s6 = processA*300)
+        sw $s6 $s6 100 (guarda no endereço de mem $s6+100 o valor de $s6=processA*300)
+        mult $s4 $s5 $s1 ($s1 = $s4*$s5 ou $s1 = processB*300)
+        sw $s1 $s1 0 (guarda no endereço de mem $s1+0 o valor de $s1=processB*300)
+    */
 
     currentProcess = processA;
-    loadStack((currentProcess*300));
+    loadStack(((currentProcess*300)+100));
 }
